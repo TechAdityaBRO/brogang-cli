@@ -1,0 +1,24 @@
+# Cloudflare Pages configuration for the Bro Gang AI free endpoint.
+#
+# Deploy:
+#   npx wrangler pages deploy public
+#
+# The site serves two things: a static landing page (public/) and an
+# OpenAI-compatible API (functions/[[path]].js) that the CLI calls.
+
+name = "brogang-ai"
+compatibility_date = "2026-01-01"
+pages_build_output_dir = "public"
+
+# Workers AI binding. The free plan includes a daily inference allowance.
+[ai]
+binding = "AI"
+
+# Model used when the client does not pass an @cf/ prefixed model id.
+[vars]
+BG_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+
+# Optional: per-client rate limiting. Create a KV namespace and uncomment.
+# [kv_namespaces]
+# binding = "CACHE"
+# id = "<your-kv-namespace-id>"

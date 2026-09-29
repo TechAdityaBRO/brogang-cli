@@ -1,0 +1,17 @@
+# Build output
+/bin/
+/dist/
+*.exe
+
+# Go
+*.test
+*.out
+vendor/
+
+# Wrangler
+worker/.wrangler/
+worker/node_modules/
+
+# Editors
+.vscode/
+.idea/
