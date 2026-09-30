@@ -123,10 +123,17 @@ jobs:
   release:
     name: Publish release
     needs: [version, build, checksums]
-    if: github.event_name == 'push'
+    # workflow_dispatch is allowed too so a broken release can be retried
+    # without deleting and re-pushing the tag (which would also re-trigger
+    # the npm publish).
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
+      # There is no checkout in this job, so gh cannot discover the repository
+      # from a git remote — it died with "failed to run git: not a git
+      # repository". GH_REPO tells it explicitly.
+      GH_REPO: ${{ github.repository }}
     steps:
       - uses: actions/download-artifact@v4
         with:
