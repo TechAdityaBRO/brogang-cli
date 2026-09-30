@@ -156,13 +156,15 @@ jobs:
           EOF
           )
 
-          # workflow_dispatch has no tag yet, so create one first.
-          if ! git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null 2>&1; then
-            git init -q
-            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            git commit --allow-empty -q -m "release v$VERSION"
-            git tag "v$VERSION"
-            git push -q origin "v$VERSION"
+          # This job has no checkout step, so there is no local repository, no
+          # remote and no git identity — the old `git ls-remote` always failed
+          # and the fallback `git commit` died with "empty ident name" (128).
+          # Create the tag through the API instead, and only for a manual
+          # dispatch: a tag push already has one.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            sha=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)
+            gh api "repos/${GITHUB_REPOSITORY}/git/refs" \
+              -f ref="refs/tags/v${VERSION}" -f sha="${sha}" >/dev/null 2>&1 || true
           fi
 
           gh release create "v$VERSION" \
