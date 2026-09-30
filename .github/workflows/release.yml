@@ -68,7 +68,17 @@ jobs:
           ext=""
           [ "${{ matrix.goos }}" = "windows" ] && ext=".exe"
           name="${APP}-${{ matrix.goos }}-${{ matrix.goarch }}"
-          out="dist/${name}${ext}"
+
+          # The ARCHIVE name, never the binary name. `ext` only suffixes the
+          # executable that sits *inside* the archive; reusing it here wrote
+          # the Windows zip as "brogang-windows-amd64.exe", which the
+          # *.tar.gz|*.zip filter in Checksums then dropped entirely, so
+          # SHA256SUMS.txt shipped without the Windows builds.
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            out="dist/${name}.zip"
+          else
+            out="dist/${name}.tar.gz"
+          fi
 
           # Windows binaries are zipped, everything else ships as a tarball
           # so checksums and extraction behave the same on every platform.
@@ -180,13 +190,70 @@ jobs:
             artifacts/* \
             || gh release upload "v$VERSION" artifacts/* --clobber
 
+  # Pushes the landing page plus the Windows archives to Cloudflare Pages, so
+  # the WinGet manifest can download from https://brogangaicli.pages.dev rather
+  # than from github.com. The Pages project is not connected to GitHub (no
+  # GitHub App installation on the account), so it has to be deployed from here.
+  #
+  # Needs CLOUDFLARE_API_TOKEN (Pages: Edit) and CLOUDFLARE_ACCOUNT_ID. When
+  # the token is missing the job still goes green and just says so, so a repo
+  # without Cloudflare credentials never shows a red run.
+  pages:
+    name: Deploy Pages
+    needs: [version, build, checksums]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Stage downloads
+        shell: bash
+        run: |
+          mkdir -p worker/public/downloads
+          cp artifacts/brogang-windows-*.zip worker/public/downloads/
+          if [ -f artifacts/SHA256SUMS.txt ]; then
+            cp artifacts/SHA256SUMS.txt worker/public/downloads/
+          fi
+          ls -l worker/public/downloads
+
+      - name: Check Cloudflare credentials
+        id: gate
+        shell: bash
+        run: |
+          if [ -z "$CF_TOKEN" ] || [ -z "$CF_ACCOUNT" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID not set - skipping the Pages deploy"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.gate.outputs.ready == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: pages deploy public --project-name brogangaicli
+
   # Opens a PR against microsoft/winget-pkgs. Requires WINGET_TOKEN (a classic
   # PAT with public_repo + workflow scopes) and a TechAdityaBRO/winget-pkgs
   # fork. Skipped cleanly when the secret is absent so a missing token never
   # shows up as a red run.
   winget:
     name: Submit to WinGet
-    needs: [version, release]
+    # `pages` is in the chain because the manifest's InstallerUrl points at
+    # brogangaicli.pages.dev - that file has to be live before winget can
+    # fetch and hash it.
+    needs: [version, release, pages]
     runs-on: ubuntu-slim
     permissions:
       contents: read

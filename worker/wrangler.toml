@@ -5,8 +5,12 @@
 #
 # The site serves two things: a static landing page (public/) and an
 # OpenAI-compatible API (functions/[[path]].js) that the CLI calls.
+#
+# The name MUST match the live project or `wrangler pages deploy` silently
+# creates a second, empty site: brogangaicli.pages.dev is the one the CLI
+# (BroGangBaseURL) and the WinGet manifest both point at.
 
-name = "brogang-ai"
+name = "brogangaicli"
 compatibility_date = "2026-01-01"
 pages_build_output_dir = "public"
 
