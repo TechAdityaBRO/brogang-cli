@@ -1,0 +1,17 @@
+# Always check out with LF.
+#
+# Windows runners default to core.autocrlf=true, which rewrites every text
+# file to CRLF on checkout. gofmt normalises to LF, so `gofmt -l` then reports
+# every Go file as mis-formatted on Windows even though nothing is wrong —
+# the check passed on Ubuntu and failed on Windows for the same commit.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff2 binary
+*.gz binary
+*.zip binary

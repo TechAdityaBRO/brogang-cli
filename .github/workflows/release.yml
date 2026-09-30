@@ -80,7 +80,9 @@ jobs:
           cp README.md LICENSE "stage/$name/" 2>/dev/null || true
 
           if [ "${{ matrix.goos }}" = "windows" ]; then
-            (cd stage && zip -qr "../$out" "$name")
+            # Entries sit at the archive root (no wrapping folder) so winget's
+            # portable installer finds brogang.exe without a nested path.
+            (cd "stage/$name" && zip -qr "$GITHUB_WORKSPACE/$out" ./*)
           else
             tar -C stage -czf "dist/${name}.tar.gz" "$name"
           fi
@@ -168,3 +170,36 @@ jobs:
             --notes "$notes" \
             artifacts/* \
             || gh release upload "v$VERSION" artifacts/* --clobber
+
+  # Opens a PR against microsoft/winget-pkgs. Requires WINGET_TOKEN (a classic
+  # PAT with public_repo + workflow scopes) and a TechAdityaBRO/winget-pkgs
+  # fork. Skipped cleanly when the secret is absent so a missing token never
+  # shows up as a red run.
+  winget:
+    name: Submit to WinGet
+    needs: [version, release]
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+    steps:
+      - name: Check for a WinGet token
+        id: gate
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+        shell: bash
+        run: |
+          if [ -n "$WINGET_TOKEN" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::WINGET_TOKEN is not set - skipping the WinGet submission"
+          fi
+
+      - name: Publish to WinGet
+        if: steps.gate.outputs.ready == 'true'
+        uses: vedantmgoyal9/winget-releaser@main
+        with:
+          identifier: BROGANG.BroGangCLI
+          version: ${{ needs.version.outputs.version }}
+          installers-regex: '^brogang-windows-(amd64|arm64)\.zip$'
+          token: ${{ secrets.WINGET_TOKEN }}
