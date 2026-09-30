@@ -10,9 +10,6 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
-    paths:
-      - "ts/**"
-      - ".github/workflows/npm.yml"
   workflow_dispatch:
 
 permissions:
@@ -66,7 +63,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    environment: npm
     steps:
       - uses: actions/checkout@v4
 
