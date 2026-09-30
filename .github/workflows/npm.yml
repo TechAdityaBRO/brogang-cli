@@ -86,7 +86,29 @@ jobs:
             exit 1
           fi
 
+      - name: Check prerequisites
+        id: gate
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
+        run: |
+          # npm rejects a re-publish of an existing version, so publishing from
+          # a dev machine first must not make this job fail on the tag.
+          ver="${GITHUB_REF_NAME#v}"
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://registry.npmjs.org/@brogang%2Fcli/$ver")
+          if [ "$code" = "200" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::@$ver is already on the registry - skipping publish"
+          elif [ -z "$NPM_TOKEN" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::NPM_TOKEN is not set - skipping the npm publish"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish
+        if: steps.gate.outputs.ready == 'true'
         run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
