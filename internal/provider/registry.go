@@ -9,7 +9,7 @@ const (
 	// BroGangBaseURL is the hosted, keyless endpoint run by BRO GANG on
 	// Cloudflare Pages. It is the CLI default so a fresh install works with
 	// no account, no key, and no setup.
-	BroGangBaseURL = "https://brogang.techaditya.workers.dev/v1"
+	BroGangBaseURL = "https://brogangaicli.pages.dev/v1"
 	BroGangModel   = "llama-3.3-70b"
 
 	// Cloudflare Workers AI, for users who bring their own token.

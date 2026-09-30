@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bro Gang AI — free endpoint</title>
+<meta name="description" content="Free, keyless AI endpoint powering Bro Gang AI CLI.">
+<style>
+  :root { --pink:#ff3b9e; --cyan:#00e5ff; --bg:#0a0a1a; --panel:#111128; --ink:#e8e8f0; --dim:#8a8aa3; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    display:flex; align-items:center; justify-content:center; padding:32px;
+  }
+  .card { max-width:640px; width:100%; border:2px solid var(--pink); border-radius:4px;
+    background:var(--panel); padding:32px; box-shadow:0 0 40px rgba(255,59,158,.18); }
+  h1 { font-size:34px; letter-spacing:-1px; }
+  h1 .a { color:var(--cyan); } h1 .b { color:var(--pink); }
+  .tag { color:var(--dim); margin-top:6px; font-size:14px; }
+  .badge { display:inline-block; margin-top:18px; padding:6px 12px; border:1px solid var(--cyan);
+    color:var(--cyan); border-radius:999px; font-size:12px; }
+  .rows { margin-top:26px; display:grid; gap:10px; }
+  .row { display:flex; gap:14px; align-items:baseline; border-left:3px solid var(--pink); padding-left:12px; }
+  .k { color:var(--pink); min-width:96px; }
+  .v { color:var(--ink); word-break:break-all; }
+  pre { margin-top:26px; background:#08081a; border:1px solid #1e1e3c; border-radius:4px;
+    padding:16px; overflow-x:auto; font-size:13px; line-height:1.7; color:var(--ink); }
+  .p { color:var(--cyan); } .c { color:var(--dim); } .s { color:var(--pink); }
+  .links { margin-top:24px; display:flex; gap:18px; flex-wrap:wrap; font-size:13px; }
+  .links a { color:var(--pink); text-decoration:none; border-bottom:1px solid transparent; }
+  .links a:hover { border-bottom-color:var(--pink); }
+  footer { margin-top:26px; color:var(--dim); font-size:12px; border-top:1px solid #1e1e3c; padding-top:16px; }
+</style>
+</head>
+<body>
+<main class="card">
+  <h1><span class="a">Bro</span> <span class="b">Gang</span> AI</h1>
+  <p class="tag">Free forever endpoint · East 2022 · Made in India</p>
+  <span class="badge">NO KEY · NO SIGNUP · NO COST</span>
+
+  <div class="rows">
+    <div class="row"><span class="k">POST</span><span class="v">/v1/chat/completions</span></div>
+    <div class="row"><span class="k">GET</span><span class="v">/v1/models</span></div>
+    <div class="row"><span class="k">MODEL</span><span class="v">@cf/meta/llama-3.3-70b-instruct-fp8-fast</span></div>
+    <div class="row"><span class="k">PROTOCOL</span><span class="v">OpenAI compatible</span></div>
+  </div>
+
+  <pre><span class="c"># zero setup, first run</span>
+<span class="p">go install</span> github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest
+<span class="p">brogang</span> <span class="s">"explain this repo"</span></pre>
+
+  <div class="links">
+    <a href="https://github.com/TechAdityaBRO/brogang-cli">GitHub</a>
+    <a href="https://brogang.techaditya.workers.dev">BRO GANG site</a>
+    <a href="https://pglove.jo3.org">PGlove browser</a>
+    <a href="https://discord.gg/TSWg34Zets">Discord</a>
+  </div>
+
+  <footer>Built by BRO GANG · a community of 38 friends. Fork it, break it, ship it.</footer>
+</main>
+</body>
+</html>
