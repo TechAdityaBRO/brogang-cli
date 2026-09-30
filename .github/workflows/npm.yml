@@ -1,0 +1,96 @@
+name: npm
+
+# The TypeScript package is installed and published from CI so nothing is
+# compiled on a developer machine.
+#
+#   push to main   -> typecheck + build (artifact only)
+#   tag v*         -> also publish to npm
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths:
+      - "ts/**"
+      - ".github/workflows/npm.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: ts
+
+jobs:
+  check:
+    name: Typecheck & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: pnpm install
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Smoke test the compiled CLI
+        run: |
+          node dist/index.js --version
+          node dist/index.js --help | head -20
+          node dist/index.js --list-providers
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brogang-ts-dist
+          path: ts/dist
+          if-no-files-found: error
+
+  publish:
+    name: Publish to npm
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        run: pnpm install
+
+      - name: Verify tag matches package.json version
+        run: |
+          want="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$want" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json (expected $want)"
+            exit 1
+          fi
+
+      - name: Publish
+        run: pnpm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

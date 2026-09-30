@@ -23,7 +23,7 @@ jobs:
         with:
           go-version: stable
           cache: true
-      - run: gofmt -l ./cmd ./internal
+      - run: test -z "$(gofmt -l ./cmd ./internal)" || { gofmt -l ./cmd ./internal; exit 1; }
       - run: go vet ./...
       - run: go test ./...
 

@@ -1,0 +1,88 @@
+{
+  "name": "@brogang/cli",
+  "version": "0.1.0",
+  "description": "Free forever AI coding agent for your terminal. No signup, no API key, no cost.",
+  "keywords": [
+    "ai",
+    "cli",
+    "coding-agent",
+    "agent",
+    "llm",
+    "ai-assistant",
+    "terminal",
+    "code",
+    "openai",
+    "anthropic",
+    "ollama",
+    "cloudflare-workers-ai",
+    "brogang"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "brogang": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js"
+    },
+    "./provider": {
+      "types": "./dist/provider.d.ts",
+      "import": "./dist/provider.js"
+    },
+    "./agent": {
+      "types": "./dist/agent.d.ts",
+      "import": "./dist/agent.js"
+    },
+    "./tools": {
+      "types": "./dist/tools.d.ts",
+      "import": "./dist/tools.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\"",
+    "prepublishOnly": "pnpm run typecheck && pnpm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TechAdityaBRO/brogang-cli.git"
+  },
+  "homepage": "https://brogangaicli.pages.dev",
+  "bugs": {
+    "url": "https://github.com/TechAdityaBRO/brogang-cli/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}

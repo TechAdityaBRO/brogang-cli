@@ -3,6 +3,10 @@
 /dist/
 *.exe
 
+# TypeScript package
+ts/dist/
+ts/node_modules/
+
 # Go
 *.test
 *.out

@@ -51,15 +51,34 @@ Bro Gang AI CLI is a terminal coding agent...
 
 ## Install
 
+Two ways — whichever is reachable for you:
+
 ```bash
-# From source
+# 1. npm — works everywhere, no GitHub download needed
+npm install -g @brogang/cli
+
+# 2. GitHub Releases — prebuilt static binaries, no package manager
+#    https://github.com/TechAdityaBRO/brogang-cli/releases
+#    brogang-linux-amd64.tar.gz
+#    brogang-windows-amd64.zip
+#    brogang-darwin-arm64.tar.gz   (+ arm64/amd64 for each OS)
+```
+
+Or build from source:
+
+```bash
 go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest
 
-# Or build it
 git clone https://github.com/TechAdityaBRO/brogang-cli
 cd brogang-cli && make build
 ./bin/brogang
 ```
+
+| Distribution | Good for |
+|:--|:--|
+| **npm** (`@brogang/cli`) | Anyone who can reach the npm registry but not GitHub |
+| **GitHub Releases** | A single static binary, no Node required |
+| **`go install`** | Already have a Go toolchain |
 
 ## Usage
 
@@ -106,11 +125,19 @@ brogang-cli/
 │   ├── tools/            # read/write/edit/list/search/run_command
 │   ├── config/           # ~/.brogang/config.json
 │   └── theme/            # Bang Mach terminal theme
+├── ts/                   # TypeScript port, published as @brogang/cli
 └── worker/               # Cloudflare Pages site powering the free endpoint
     ├── functions/[[path]].js   # OpenAI-compatible API handler
     ├── public/index.html       # landing page
     └── wrangler.toml
 ```
+
+### Distribution
+
+The CLI ships two ways so a blocked or unavailable channel is never a dead end:
+
+- **npm** — `npm install -g @brogang/cli`, built and published by CI
+- **GitHub Releases** — static binaries for six platform/arch combinations
 
 ### The free endpoint
 
