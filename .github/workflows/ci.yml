@@ -23,7 +23,15 @@ jobs:
         with:
           go-version: stable
           cache: true
-      - run: test -z "$(gofmt -l ./cmd ./internal)" || { gofmt -l ./cmd ./internal; exit 1; }
+      # bash exists on every runner; the default shell on Windows is pwsh,
+      # where `test -z` does not exist and the check would always fail.
+      - name: gofmt
+        shell: bash
+        run: |
+          unformatted="$(gofmt -l ./cmd ./internal)"
+          if [ -n "$unformatted" ]; then
+            echo "gofmt needed on:"; echo "$unformatted"; exit 1
+          fi
       - run: go vet ./...
       - run: go test ./...
 

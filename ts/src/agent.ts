@@ -91,7 +91,7 @@ export class CancelledError extends Error {
 }
 
 export class Agent {
-  private readonly opts: AgentOptions;
+  private opts: AgentOptions;
   private messages: Message[];
 
   constructor(opts: AgentOptions) {
@@ -109,6 +109,15 @@ export class Agent {
   /** reset clears the conversation, keeping the system prompt. */
   reset(): void {
     this.messages = this.messages.slice(0, 1);
+  }
+
+  /**
+   * setSignal swaps the cancellation signal for the next turn. A session
+   * reuses one Agent so the transcript accumulates, but Ctrl+C must abandon
+   * only the turn in flight — so each turn installs a fresh controller.
+   */
+  setSignal(signal: AbortSignal): void {
+    this.opts.signal = signal;
   }
 
   systemPromptText(): string {

@@ -8,7 +8,7 @@ import * as path from "node:path";
 import * as readline from "node:readline";
 import * as theme from "./theme.js";
 import * as cfgmod from "./config.js";
-import type { Config, ProviderSettings } from "./config.js";
+import type { Config } from "./config.js";
 import {
   BroGangBaseURL,
   OllamaBaseURL,
@@ -16,6 +16,7 @@ import {
   isNoAPIKey,
   type Provider,
   type ProviderRegistry,
+  type ProviderSettings,
 } from "./provider.js";
 import { Agent, CancelledError, DefaultMaxSteps, type AgentEvent } from "./agent.js";
 import { ToolRegistry } from "./tools.js";
@@ -352,7 +353,7 @@ function endpointHint(err: Error | undefined, active: Provider): string | undefi
     return (
       err.message +
       "\n\n" +
-      theme.Info("Options:") +
+      theme.info("Options:") +
       "\n  " +
       theme.Cyan("1.") +
       " deploy the endpoint:  cd worker && npx wrangler pages deploy public" +
@@ -518,9 +519,15 @@ async function runInteractive(
   });
   const session = createSession(rl, cfg.auto_approve === true || f.yolo);
 
-  let controller: AbortController | null = null;
+  let controller = new AbortController();
+  let busy = false;
+  // One Agent for the whole session so the transcript actually accumulates.
+  // Each turn installs a fresh signal, so Ctrl+C abandons the turn in flight
+  // rather than poisoning every later turn.
+  const agent = newAgent(active, cfg, root, f, session, controller);
+
   rl.on("SIGINT", () => {
-    if (controller) {
+    if (busy) {
       controller.abort();
       session.interrupt();
     } else {
@@ -562,16 +569,17 @@ async function runInteractive(
 
     // Ctrl+C mid-turn abandons the turn, not the session.
     controller = new AbortController();
-    const turnAgent = newAgent(active, cfg, root, f, session, controller);
+    agent.setSignal(controller.signal);
+    busy = true;
 
     let answer = "";
     let error: Error | undefined;
     try {
-      answer = await turnAgent.send(input);
+      answer = await agent.send(input);
     } catch (err) {
       error = err as Error;
     } finally {
-      controller = null;
+      busy = false;
     }
 
     if (answer !== "") {

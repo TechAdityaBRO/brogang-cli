@@ -176,7 +176,7 @@ function walk(
         return; // unreadable entry: skip rather than abort
       }
 
-      if (action === STOP) throw STOP;
+      if (action === "stop") throw STOP;
       if (isDir && action !== "skipdir") visit(abs);
     }
   };
