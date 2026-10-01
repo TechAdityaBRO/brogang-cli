@@ -184,11 +184,31 @@ jobs:
               -f ref="refs/tags/v${VERSION}" -f sha="${sha}" >/dev/null 2>&1 || true
           fi
 
-          gh release create "v$VERSION" \
-            --title "Bro Gang AI CLI v$VERSION" \
-            --notes "$notes" \
-            artifacts/* \
-            || gh release upload "v$VERSION" artifacts/* --clobber
+          # Create the release if it does not exist yet; otherwise only ADD
+          # assets that are missing. Re-running this job - which is how the
+          # Pages deploy gets re-triggered - rebuilds the Windows zips with
+          # new mtimes, so clobbering would change their SHA256. A WinGet
+          # manifest pins that hash forever, and `winget install` would then
+          # fail its integrity check. If an asset really must be replaced,
+          # delete it from the release page first.
+          if ! gh release view "v$VERSION" >/dev/null 2>&1; then
+            gh release create "v$VERSION" \
+              --title "Bro Gang AI CLI v$VERSION" \
+              --notes "$notes" \
+              artifacts/*
+            exit 0
+          fi
+
+          existing=$(gh release view "v$VERSION" --json assets --jq '.assets[].name')
+          for f in artifacts/*; do
+            name=$(basename "$f")
+            if grep -qxF "$name" <<<"$existing"; then
+              echo "keep  $name (already published)"
+            else
+              gh release upload "v$VERSION" "$f"
+              echo "add   $name"
+            fi
+          done
 
   # Pushes the landing page plus the Windows archives to Cloudflare Pages, so
   # the WinGet manifest can download from https://brogangaicli.pages.dev rather
