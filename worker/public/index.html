@@ -46,7 +46,9 @@
   --r-sm:6px; --r-md:10px; --r-lg:14px; --r-pill:9999px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+/* codapress.co.uk reserves the gutter from the first paint so the page never
+   lurches sideways when it grows past the fold. */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-y:scroll;scrollbar-gutter:stable}
 body{
   background:var(--bg);color:var(--ink);font-family:var(--sans);
   line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;
@@ -88,6 +90,79 @@ h1,h2{text-wrap:balance}
   .js [data-rv]{opacity:1;transform:none;transition:none}
   html{scroll-behavior:auto}
 }
+
+/* ---------- reading progress (daoism.systems) ----------
+   A 2px rule pinned to the top edge that fills as you read. Sits above the
+   sticky header, so it survives the header hiding itself. */
+.progress{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:120;
+  pointer-events:none;background:rgba(255,255,255,.06);
+}
+.progress i{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,var(--pink),var(--cyan));
+  transition:width .1s linear;
+}
+
+/* ---------- cursor (codapress.co.uk) ----------
+   The pointer is hidden on precise devices and replaced by a small filled
+   square with a larger outlined square trailing it, blended with difference
+   so it inverts whatever it crosses. Both are hard-edged squares, which
+   doubles as the pixel cue from minecraft.net. Never shown on touch, and
+   never under prefers-reduced-motion. */
+.cursor{
+  position:fixed;inset:0;z-index:200;pointer-events:none;
+  mix-blend-mode:difference;opacity:0;transition:opacity .25s var(--ease);
+}
+.cursor.on{opacity:1}
+.cursor span{
+  position:absolute;top:0;left:0;display:block;
+  transform:translate(-50%,-50%);
+  transition:width .2s var(--ease),height .2s var(--ease),background-color .2s var(--ease);
+}
+.cur-o{width:30px;height:30px;border:1.5px solid #fff}
+.cur-d{width:6px;height:6px;background:#fff}
+.cursor.is-a .cur-o{width:54px;height:54px;background:rgba(255,255,255,.9);border-color:transparent}
+.cursor.is-a .cur-d{opacity:0}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  body,a,button{cursor:none}
+}
+@media (hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){
+  .cursor{display:none}
+}
+
+/* ---------- rotating rings (phobos.com.au) ----------
+   Three dotted circles turning at 120s / 90s / 150s, one counter-rotating.
+   Pure SVG + CSS, no library, and it costs nothing while off-screen. */
+.cta{position:relative;overflow:hidden}
+.rings{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(780px,132vw);aspect-ratio:1;pointer-events:none;z-index:0;
+  opacity:.42;
+}
+.rings circle{
+  fill:none;stroke:rgba(255,255,255,.9);stroke-width:1;
+  stroke-dasharray:1.5 10;vector-effect:non-scaling-stroke;
+  transform-box:view-box;transform-origin:center;
+}
+.rings .r0{animation:ring-spin 120s linear infinite}
+.rings .r1{animation:ring-spin 90s linear infinite reverse;stroke:rgba(255,59,158,.9)}
+.rings .r2{animation:ring-spin 150s linear infinite;stroke:rgba(0,229,255,.9)}
+@keyframes ring-spin{to{transform:rotate(360deg)}}
+.cta .wrap{position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){.rings circle{animation:none}}
+
+/* ---------- pixel rule (minecraft.net) ----------
+   Alternating 8px blocks in brand colour — the block-edge motif, used once
+   as the hand-off between the page and the footer. */
+.pixdiv{
+  height:8px;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(255,59,158,.75) 0 8px,transparent 8px 16px),
+    repeating-linear-gradient(90deg,transparent 0 8px,rgba(0,229,255,.75) 8px 16px);
+  background-size:16px 8px;
+  background-repeat:repeat-x;
+}
 ::selection{background:var(--pink);color:#0a0a1a}
 a{color:inherit;text-decoration:none}
 code,kbd{font-family:var(--mono)}
@@ -106,9 +181,13 @@ main,footer{position:relative;z-index:1}
   background:rgba(10,10,26,.55);
   backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
   border-bottom:1px solid transparent;
-  transition:background-color var(--dur-m) var(--ease),
+  /* phobos.com.au: the bar retracts out of view on the way down and
+     returns the moment you scroll back up, on a 450ms curve. */
+  transition:transform .45s var(--ease),
+             background-color var(--dur-m) var(--ease),
              border-color var(--dur-m) var(--ease);
 }
+.nav.hide{transform:translateY(-100%)}
 .nav.stuck{
   background:rgba(10,10,26,.88);
   border-bottom-color:var(--hair);
@@ -221,8 +300,12 @@ h1 em{font-style:normal;color:var(--pink)}
   background:var(--panel-2);border:1px solid var(--line-2);color:var(--dim);
   border-radius:6px;padding:6px 12px;font-family:var(--mono);font-size:11px;
   cursor:pointer;transition:.15s;flex:none;text-transform:uppercase;letter-spacing:.08em;
+  /* minecraft.net's button physics: a hard offset block underneath that the
+     key physically presses into. */
+  box-shadow:0 3px 0 rgba(0,0,0,.6);
 }
 .copy:hover{color:var(--ink);border-color:var(--dim)}
+.copy:active{transform:translateY(3px);box-shadow:0 0 0 rgba(0,0,0,.6)}
 .copy.ok{color:var(--green);border-color:var(--green)}
 .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
 .hero-note{margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--dimmer)}
@@ -477,6 +560,11 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
 <!-- Column scaffolding borrowed from bleibtgleich.dev: eight hairline rules
      behind the page, aligned to the same gutters as .wrap. -->
 <div class="gridlines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<!-- Reading progress + replacement pointer. Purely decorative, inert without
+     JS, and hidden outright on touch or reduced-motion devices. -->
+<div class="progress" aria-hidden="true"><i id="prog"></i></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cur-o"></span><span class="cur-d"></span></div>
 
 <nav class="nav" id="nav">
   <div class="nav-in">
@@ -807,6 +895,14 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
 
 <!-- CTA -->
 <section class="cta rule">
+  <!-- phobos.com.au's dotted rings, turning slowly behind the copy. -->
+  <div class="rings" aria-hidden="true">
+    <svg viewBox="0 0 400 400">
+      <circle class="r0" cx="200" cy="200" r="197"/>
+      <circle class="r1" cx="200" cy="200" r="150"/>
+      <circle class="r2" cx="200" cy="200" r="103"/>
+    </svg>
+  </div>
   <div class="wrap">
     <div class="eyebrow" style="text-align:center">Get started</div>
     <h2 class="center">One command. Zero setup.</h2>
@@ -840,6 +936,9 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
 </section>
 
 </main>
+
+<!-- minecraft.net: an 8px block edge handing the page over to the footer. -->
+<div class="pixdiv" aria-hidden="true"></div>
 
 <footer>
   <div class="wrap">
@@ -888,10 +987,27 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
 
 <script>
 var nav=document.getElementById('nav');
-addEventListener('scroll',function(){nav.classList.toggle('stuck',scrollY>8)});
-document.getElementById('burger').onclick=function(){
-  document.getElementById('navlinks').classList.toggle('open');
-};
+var prog=document.getElementById('prog');
+var burger=document.getElementById('burger');
+var links=document.getElementById('navlinks');
+burger.onclick=function(){links.classList.toggle('open')};
+
+/* A single passive listener drives the chrome: the header condensing, it
+   retracting on the way down and returning on the way up (phobos.com.au),
+   and the reading-progress rule pinned to the top (daoism.systems). */
+var lastY=scrollY;
+addEventListener('scroll',function(){
+  var y=scrollY;
+  nav.classList.toggle('stuck',y>8);
+  if(prog){
+    var max=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(max>0?(y/max)*100:0)+'%';
+  }
+  if(links.classList.contains('open')){nav.classList.remove('hide');lastY=y;return}
+  if(y>260&&y>lastY+4)nav.classList.add('hide');
+  else if(y<lastY-4||y<=260)nav.classList.remove('hide');
+  lastY=y;
+},{passive:true});
 document.querySelectorAll('#navlinks a').forEach(function(a){
   a.addEventListener('click',function(){document.getElementById('navlinks').classList.remove('open')});
 });
@@ -953,6 +1069,24 @@ document.querySelectorAll('.install').forEach(function(box){
     });
   },{rootMargin:'0px 0px -6% 0px',threshold:.15});
   els.forEach(function(el){io.observe(el)});
+})();
+
+/* codapress.co.uk: the pointer becomes two hard-edged squares blended by
+   difference, so it inverts whatever it crosses. Runs only on a fine pointer
+   without reduced motion — coarse pointers and touch never see it. */
+(function(){
+  if(!matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches)return;
+  var c=document.getElementById('cursor');
+  if(!c)return;
+  var live=false;
+  addEventListener('mousemove',function(e){
+    if(!live){live=true;c.classList.add('on')}
+    c.style.transform='translate3d('+e.clientX+'px,'+e.clientY+'px,0)';
+    var t=e.target;
+    c.classList.toggle('is-a',!!(t&&t.closest&&t.closest('a,button')));
+  },{passive:true});
+  document.addEventListener('mouseleave',function(){live=false;c.classList.remove('on')});
+  document.addEventListener('mouseenter',function(){if(live)c.classList.add('on')});
 })();
 </script>
 </body>
