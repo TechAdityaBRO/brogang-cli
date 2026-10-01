@@ -23,46 +23,144 @@
   --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --max:1140px;
+  /* Borrowed from atomic.chat: hairlines as white-alpha rather than a solid
+     hex, so borders stay the same weight over the pink/cyan glow as over the
+     flat background. Its --border is #ffffff14 (8%). */
+  --hair:rgba(255,255,255,.08);
+  --hair-2:rgba(255,255,255,.15);
+  /* atomic.chat's two curves: the UI easing and the overshooting spring it
+     uses on the logo tile. */
+  --ease:cubic-bezier(.4,0,.2,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  /* bleibtgleich.dev ships its motion as named durations + curves rather than
+     magic numbers, so every transition in the page reads the same vocabulary. */
+  --dur-s:.2s; --dur-m:.4s; --dur-l:.8s;
+  --ease-out:cubic-bezier(.25,1,.5,1);
+  --ease-io:cubic-bezier(.76,0,.24,1);
+  /* boc.studio leans on easeOutQuint for its marquees and card reveals. */
+  --ease-quint:cubic-bezier(.22,1,.36,1);
+  /* Cerebrium's back-out curve — overshoots slightly, good for badges. */
+  --ease-back:cubic-bezier(.175,.885,.32,1.275);
+  /* Radii ladder: opencode.ai caps UI chrome at 4–6px, atomic.chat goes
+     full pill on primary actions. We keep both ends. */
+  --r-sm:6px; --r-md:10px; --r-lg:14px; --r-pill:9999px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   background:var(--bg);color:var(--ink);font-family:var(--sans);
   line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+}
+/* atomic.chat ships an explicit focus ring; keep keyboard users visible. */
+:focus-visible{
+  outline:.125rem solid var(--cyan);outline-offset:.125rem;border-radius:4px;
+}
+
+/* opencode.ai styles ::selection with a design token instead of letting the
+   browser pick its default blue. */
+::selection{background:rgba(255,59,158,.28);color:#fff}
+::-moz-selection{background:rgba(255,59,158,.28);color:#fff}
+
+/* Cerebrium balances its headings so long lines don't leave a stubby last
+   word hanging. Cheap, and it visibly improves the hero. */
+h1,h2{text-wrap:balance}
+
+/* ---------- background column grid (bleibtgleich.dev) ----------
+   Eight faint vertical rules behind everything. It reads as scaffolding —
+   the thing that makes awwwards pages feel measured rather than floated. */
+.gridlines{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  max-width:var(--max);margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:repeat(8,1fr);
+}
+.gridlines i{border-left:1px solid rgba(255,255,255,.035)}
+.gridlines i:last-child{border-right:1px solid rgba(255,255,255,.035)}
+@media (max-width:760px){.gridlines{display:none}}
+
+/* ---------- scroll reveal (bleibtgleich.dev hides until JS confirms) ----------
+   If JS never runs, nothing is hidden — the observer only adds the class. */
+[data-rv]{opacity:1}
+.js [data-rv]{opacity:0;transform:translateY(18px);
+  transition:opacity var(--dur-l) var(--ease-out),transform var(--dur-l) var(--ease-out)}
+.js [data-rv].in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .js [data-rv]{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
 }
 ::selection{background:var(--pink);color:#0a0a1a}
 a{color:inherit;text-decoration:none}
 code,kbd{font-family:var(--mono)}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+/* Sit content above the fixed column rules, which then only show through
+   elements that carry no background of their own. */
+main,footer{position:relative;z-index:1}
 
-/* ---------- nav ---------- */
+/* ---------- nav ----------
+   atomic.chat's header: transparent at rest, then a 24px blur at 180%
+   saturation with a hairline border once you scroll, padding easing down
+   on the same curve. opencode.ai keeps the same idea (sticky, hairline
+   bottom border) but flatter — we land between the two. */
 .nav{
   position:sticky;top:0;z-index:60;
-  background:rgba(10,10,26,.82);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid transparent;transition:border-color .2s;
+  background:rgba(10,10,26,.55);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid transparent;
+  transition:background-color var(--dur-m) var(--ease),
+             border-color var(--dur-m) var(--ease);
 }
-.nav.stuck{border-bottom-color:var(--line)}
-.nav-in{max-width:var(--max);margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:30px}
+.nav.stuck{
+  background:rgba(10,10,26,.88);
+  border-bottom-color:var(--hair);
+}
+.nav-in{
+  max-width:var(--max);margin:0 auto;padding:20px 24px;display:flex;
+  align-items:center;gap:30px;
+  transition:padding var(--dur-m) var(--ease);
+}
+.nav.stuck .nav-in{padding:13px 24px}
 .brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;letter-spacing:-.01em}
 .brand .mark{
-  width:26px;height:26px;border-radius:7px;flex:none;background:#12122a;
+  width:26px;height:26px;border-radius:var(--r-sm);flex:none;background:#12122a;
   border:1px solid var(--line-2);display:grid;place-items:center;
+  transition:box-shadow .3s,transform .6s var(--spring),border-color .3s;
+}
+/* atomic.chat's logo micro-interaction: the tile springs 45° and picks up
+   a glow. Small, but it is the first thing people notice on hover. */
+.brand:hover .mark{
+  transform:rotate(45deg);border-color:rgba(255,59,158,.55);
+  box-shadow:0 0 20px rgba(255,59,158,.35);
 }
 .brand .mark svg{width:14px;height:14px}
 .brand .c{color:var(--cyan)} .brand .p{color:var(--pink)}
 .nav-links{display:flex;gap:26px;margin-left:auto;align-items:center}
-.nav-links a.lnk{font-size:14px;color:var(--dim);transition:color .15s}
+.nav-links a.lnk{
+  position:relative;font-size:14px;color:var(--dim);
+  transition:color var(--dur-s) var(--ease);padding-bottom:2px;
+}
+/* atomic.chat draws the underline in with a scaleX from the left edge on
+   hover, and lets it retract on the way out. */
+.nav-links a.lnk::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:left;
+  transition:transform .25s var(--ease);
+}
 .nav-links a.lnk:hover{color:var(--ink)}
+.nav-links a.lnk:hover::after{transform:scaleX(1)}
 .btn{
   display:inline-flex;align-items:center;gap:8px;justify-content:center;
-  padding:9px 18px;border-radius:8px;font-size:14px;font-weight:500;
-  border:1px solid transparent;cursor:pointer;transition:.16s;font-family:inherit;
+  padding:10px 20px;border-radius:var(--r-pill);font-size:14px;font-weight:600;
+  border:1px solid transparent;cursor:pointer;font-family:inherit;
+  /* atomic.chat's .btn transition — all, .2s, ease-out. */
+  transition:all var(--dur-s) ease-out;
 }
 .btn-primary{background:var(--pink);color:#140109}
-.btn-primary:hover{background:#ff55ae}
-.btn-ghost{border-color:var(--line-2);color:var(--ink);background:transparent}
-.btn-ghost:hover{border-color:var(--dim);background:rgba(255,255,255,.03)}
+.btn-primary:hover{background:#ff55ae;transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(255,59,158,.32)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{border-color:var(--hair-2);color:var(--ink);background:transparent}
+.btn-ghost:hover{border-color:var(--dim);background:rgba(255,255,255,.05);
+  transform:translateY(-1px)}
 .burger{display:none;margin-left:auto;background:none;border:1px solid var(--line-2);border-radius:7px;color:var(--ink);padding:6px 11px;cursor:pointer;font-family:var(--mono);font-size:14px}
 
 /* ---------- hero ---------- */
@@ -76,10 +174,46 @@ h1 em{font-style:normal;color:var(--pink)}
   font-size:clamp(16px,1.9vw,19px);color:var(--dim);
   max-width:600px;margin:26px auto 0;line-height:1.6;
 }
+/* ---------- install ----------
+   opencode.ai puts its install command behind a tab strip: a tablist riding
+   on top of a panel, active tab marked by a 2px rule rather than a pill.
+   We borrow that shape so npm / pnpm / go / winget all sit in one block
+   instead of four stacked command bars. */
+.install{max-width:640px;margin:36px auto 0;text-align:left}
+.install .lbl{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dimmer);text-align:center;margin-bottom:13px;
+}
+.tabs{
+  display:flex;align-items:stretch;gap:4px;overflow-x:auto;
+  background:var(--panel);border:1px solid var(--line);border-bottom:none;
+  border-radius:var(--r-md) var(--r-md) 0 0;padding:0 10px;
+}
+.tab{
+  appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+  padding:15px 14px;margin:0;cursor:pointer;color:var(--dim);flex:none;
+  font-family:var(--mono);font-size:13px;line-height:1;white-space:nowrap;
+  transition:color var(--dur-s) var(--ease),border-color var(--dur-s) var(--ease);
+}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--pink)}
+.panels{
+  background:#07071a;border:1px solid var(--line);
+  border-radius:0 0 var(--r-md) var(--r-md);padding:14px;
+}
+.panel{display:none}
+.panel.on{display:block;animation:panel-in .18s ease}
+@keyframes panel-in{from{opacity:0}to{opacity:1}}
+.install .alt{
+  margin-top:14px;text-align:center;font-family:var(--mono);
+  font-size:12.5px;color:var(--dimmer);
+}
+.install .alt a{color:var(--cyan);border-bottom:1px solid rgba(0,229,255,.35)}
+.install .alt a:hover{border-bottom-color:var(--cyan)}
+
 .cmdbar{
-  max-width:540px;margin:36px auto 0;display:flex;align-items:center;gap:12px;
-  background:#07071a;border:1px solid var(--line-2);border-radius:10px;
-  padding:13px 13px 13px 17px;font-family:var(--mono);font-size:13.5px;text-align:left;
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:13.5px;text-align:left;
 }
 .cmdbar .t{flex:1;overflow-x:auto;white-space:nowrap;color:var(--ink)}
 .cmdbar .t .pr{color:var(--cyan)}
@@ -122,6 +256,48 @@ h1 em{font-style:normal;color:var(--pink)}
   margin-top:14px;text-align:left;
 }
 .cap b{color:var(--pink);font-weight:400}
+
+/* Cerebrium animates its feature terminal one line at a time: each line
+   carries an index, and the delay is derived from it rather than written
+   out by hand. */
+.term-body .ln{display:block}
+.js .term-body .ln{opacity:0}
+.term.is-visible .term-body .ln{
+  animation:ln-in .28s ease-out forwards;
+  animation-delay:calc(var(--i,0) * 80ms);
+}
+@keyframes ln-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- marquee (boc.studio) ----------
+   Their ticker tokens — gap from a fluid clamp, durations in the 60–120s
+   range so nothing reads as a slot machine. Edge-masked so items dissolve
+   into the gutters instead of clipping hard. The spacing is a margin rather
+   than a flex gap so the duplicated half measures exactly 50% and the loop
+   hands over without a jump. */
+.marquee{
+  overflow:hidden;padding:20px 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+}
+.mq-track{
+  display:flex;width:max-content;
+  animation:mq 78s linear infinite;
+}
+.marquee:hover .mq-track{animation-play-state:paused}
+.mq-track>*{
+  flex:none;margin-right:clamp(2rem,1.5rem + 1.5vw,3.125rem);
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dimmer);white-space:nowrap;
+  display:inline-flex;align-items:center;
+  column-gap:clamp(2rem,1.5rem + 1.5vw,3.125rem);
+}
+.mq-track>*::after{content:"/";color:var(--line-2)}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){
+  .mq-track{animation:none}
+  .term.is-visible .term-body .ln{animation:none;opacity:1}
+}
 
 /* ---------- sections ---------- */
 section{padding:96px 0}
@@ -294,6 +470,14 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
 </head>
 <body>
 
+<!-- Gate the reveal animations on a `.js` flag so a visitor without
+     JavaScript still sees every section (progressive enhancement). -->
+<script>document.documentElement.classList.add('js')</script>
+
+<!-- Column scaffolding borrowed from bleibtgleich.dev: eight hairline rules
+     behind the page, aligned to the same gutters as .wrap. -->
+<div class="gridlines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
 <nav class="nav" id="nav">
   <div class="nav-in">
     <a class="brand" href="#top">
@@ -323,9 +507,32 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
       No signup, no API key, no cost.
     </p>
 
-    <div class="cmdbar" id="install">
-      <div class="t"><span class="pr">$</span> go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest</div>
-      <button class="copy" data-copy="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">Copy</button>
+    <!-- Install block shaped after opencode.ai's tab strip: one tablist over
+         one panel, active state marked by a rule. npm and pnpm sit first
+         because that is how most people will actually reach this CLI. -->
+    <div class="install" id="install">
+      <div class="lbl">Install — pick your package manager</div>
+      <div class="tabs" role="tablist" aria-label="Package manager">
+        <button class="tab" type="button" role="tab" aria-selected="true"
+                data-cmd="npm install -g @brogang/cli">npm</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="pnpm add -g @brogang/cli">pnpm</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
+      </div>
+      <div class="panels">
+        <div class="panel on" role="tabpanel">
+          <div class="cmdbar">
+            <div class="t"><span class="pr">$</span> <span class="cmd">npm install -g @brogang/cli</span></div>
+            <button class="copy" data-copy="npm install -g @brogang/cli">Copy</button>
+          </div>
+        </div>
+      </div>
+      <p class="alt">
+        Prefer a binary?
+        <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener">Download from GitHub Releases</a>
+        or read the <a href="https://github.com/TechAdityaBRO/brogang-cli#install" target="_blank" rel="noopener">full install docs</a>.
+      </p>
     </div>
 
     <div class="hero-cta">
@@ -341,27 +548,28 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
           <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
           <span class="title">brogang — ~/project</span>
         </div>
-        <div class="term-body"><span class="pr">$</span> <span class="wh">brogang "add error handling to the fetch call"</span>
-
-<span class="pk">❯</span> <span class="gr">brogang</span> <span class="gr">▸</span> <span class="gr">Bro Gang AI (free, no key)</span>
-<span class="pk">⚡</span> <span class="gr">read_file</span>  <span class="gr">path: src/api.ts</span>
-<span class="pk">⚡</span> <span class="gr">edit_file</span>  <span class="gr">path: src/api.ts</span>
-<span class="gr">  ── step 3/24</span>
-
-<span class="wh">Wrapped the call in try/catch, added a typed error branch and</span>
-<span class="wh">propagated the original cause. Tests still pass.</span>
-
-<span class="gr">$</span> <span class="gn">✔</span> <span class="gr">done in 6.2s · $0.00</span></div>
+        <!-- Each line is its own block carrying an index; Cerebrium's
+             terminal reveal derives the delay from --i instead of hardcoding
+             it, so adding a line never means renumbering the rest. -->
+        <div class="term-body"><span class="ln" style="--i:0"><span class="pr">$</span> <span class="wh">brogang "add error handling to the fetch call"</span></span><span class="ln" style="--i:1">&#8203;</span><span class="ln" style="--i:2"><span class="pk">❯</span> <span class="gr">brogang</span> <span class="gr">▸</span> <span class="gr">Bro Gang AI (free, no key)</span></span><span class="ln" style="--i:3"><span class="pk">⚡</span> <span class="gr">read_file</span>  <span class="gr">path: src/api.ts</span></span><span class="ln" style="--i:4"><span class="pk">⚡</span> <span class="gr">edit_file</span>  <span class="gr">path: src/api.ts</span></span><span class="ln" style="--i:5"><span class="gr">  ── step 3/24</span></span><span class="ln" style="--i:6">&#8203;</span><span class="ln" style="--i:7"><span class="wh">Wrapped the call in try/catch, added a typed error branch and</span></span><span class="ln" style="--i:8"><span class="wh">propagated the original cause. Tests still pass.</span></span><span class="ln" style="--i:9">&#8203;</span><span class="ln" style="--i:10"><span class="gr">$</span> <span class="gn">✔</span> <span class="gr">done in 6.2s · $0.00</span></span></div>
       </div>
       <div class="cap"><b>Fig 1.</b> A full agent turn — two tool calls, one edit, zero configuration.</div>
     </div>
   </div>
 </section>
 
+<!-- TICKER (boc.studio) -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <span>Claude</span><span>GPT</span><span>Gemini</span><span>Llama</span><span>Mistral</span><span>Qwen</span><span>DeepSeek</span><span>Workers AI</span><span>Ollama</span><span>arm64</span>
+    <span>Claude</span><span>GPT</span><span>Gemini</span><span>Llama</span><span>Mistral</span><span>Qwen</span><span>DeepSeek</span><span>Workers AI</span><span>Ollama</span><span>arm64</span>
+  </div>
+</div>
+
 <!-- STATS -->
 <section class="rule">
   <div class="wrap">
-    <div class="stats">
+    <div class="stats" data-rv>
       <div class="stat">
         <div class="n">$0</div>
         <div class="f">Fig 1. Cost, forever</div>
@@ -604,9 +812,24 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
     <h2 class="center">One command. Zero setup.</h2>
     <p class="lede">Install it, run it, and it works — no key, no account, no trial counting down.</p>
 
-    <div class="cmdbar" style="margin-top:34px">
-      <div class="t"><span class="pr">$</span> go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest</div>
-      <button class="copy" data-copy="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">Copy</button>
+    <div class="install" style="margin-top:34px">
+      <div class="lbl">Install — pick your package manager</div>
+      <div class="tabs" role="tablist" aria-label="Package manager">
+        <button class="tab" type="button" role="tab" aria-selected="true"
+                data-cmd="npm install -g @brogang/cli">npm</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="pnpm add -g @brogang/cli">pnpm</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
+      </div>
+      <div class="panels">
+        <div class="panel on" role="tabpanel">
+          <div class="cmdbar">
+            <div class="t"><span class="pr">$</span> <span class="cmd">npm install -g @brogang/cli</span></div>
+            <button class="copy" data-copy="npm install -g @brogang/cli">Copy</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="hero-cta" style="margin-top:24px">
@@ -693,6 +916,44 @@ document.querySelectorAll('.q button').forEach(function(b){
     if(!wasOpen)q.classList.add('open');
   });
 });
+
+/* Package-manager tabs — opencode.ai's install pattern. Swapping the text
+   and data-copy in place keeps one panel instead of four. */
+document.querySelectorAll('.install').forEach(function(box){
+  var tabs=Array.prototype.slice.call(box.querySelectorAll('.tab')),
+      cmd=box.querySelector('.cmd'), copy=box.querySelector('.copy');
+  if(!tabs.length||!cmd)return;
+  function pick(t){
+    tabs.forEach(function(x){x.setAttribute('aria-selected',x===t?'true':'false')});
+    cmd.textContent=t.getAttribute('data-cmd');
+    if(copy)copy.setAttribute('data-copy',t.getAttribute('data-cmd'));
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){pick(t)});
+    t.addEventListener('keydown',function(e){
+      var d=e.key==='ArrowRight'?1:(e.key==='ArrowLeft'?-1:0);
+      if(!d)return; e.preventDefault();
+      var n=tabs[(i+d+tabs.length)%tabs.length]; n.focus(); pick(n);
+    });
+  });
+});
+
+/* One observer drives both the terminal's line-by-line stagger and the
+   section reveals; if the API is missing everything simply renders. */
+(function(){
+  var els=document.querySelectorAll('[data-rv],.term');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(el){el.classList.add('in','is-visible')}); return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      e.target.classList.add('in','is-visible');
+      io.unobserve(e.target);
+    });
+  },{rootMargin:'0px 0px -6% 0px',threshold:.15});
+  els.forEach(function(el){io.observe(el)});
+})();
 </script>
 </body>
 </html>
