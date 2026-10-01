@@ -59,7 +59,12 @@ export default {
     // winget verifies the SHA-256 of the bytes either way.
     if (path.startsWith("/downloads/")) {
       const onDisk = await env.ASSETS.fetch(request);
-      if (onDisk.status !== 404) return onDisk;
+      // Pages answers a missing asset with the SPA shell rather than a 404
+      // whenever no 404.html is present. A text/html reply for a .zip is
+      // therefore a miss, not a file — and returning it is exactly the bug
+      // that made the WinGet InstallerUrl download a web page.
+      const type = onDisk.headers.get("content-type") || "";
+      if (onDisk.status !== 404 && !type.includes("text/html")) return onDisk;
       const proxied = await fetchReleaseAsset(path.slice("/downloads/".length));
       if (proxied) return proxied;
       // Never answer an archive request with the SPA shell: an explicit 502

@@ -45,17 +45,73 @@ export default {
       return json({ error: `not found: ${path}` }, 404);
     }
 
-    // Everything else is the landing page only. The rest of the repository is
-    // deliberately not served, so a "/" build output cannot leak source files.
+    // Static assets win; only a path that has no file falls back to the
+    // landing page. The previous version rewrote every non-root URL to
+    // /index.html, so /downloads/brogang-windows-amd64.zip returned HTML and
+    // the WinGet manifest's InstallerUrl could never be downloaded.
     if (request.method !== "GET" && request.method !== "HEAD") {
       return json({ error: `not found: ${path}` }, 404);
     }
-    if (path !== "/" && path !== "/index.html") {
-      return env.ASSETS.fetch(new Request(new URL("/index.html", url.origin), request));
+
+    // The release archives are staged here by CI, but a deployment produced
+    // from a push that predates the release has no copy on disk. Fall back to
+    // the GitHub release so a manifest published weeks ago keeps installing -
+    // winget verifies the SHA-256 of the bytes either way.
+    if (path.startsWith("/downloads/")) {
+      const onDisk = await env.ASSETS.fetch(request);
+      // Pages answers a missing asset with the SPA shell rather than a 404
+      // whenever no 404.html is present. A text/html reply for a .zip is
+      // therefore a miss, not a file — and returning it is exactly the bug
+      // that made the WinGet InstallerUrl download a web page.
+      const type = onDisk.headers.get("content-type") || "";
+      if (onDisk.status !== 404 && !type.includes("text/html")) return onDisk;
+      const proxied = await fetchReleaseAsset(path.slice("/downloads/".length));
+      if (proxied) return proxied;
+      // Never answer an archive request with the SPA shell: an explicit 502
+      // beats a hash mismatch that looks like a corrupted download.
+      return new Response("release archive unavailable", {
+        status: 502,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
     }
-    return env.ASSETS.fetch(request);
+
+    const asset = await env.ASSETS.fetch(request);
+    if (asset.status !== 404) return asset;
+    return env.ASSETS.fetch(new Request(new URL("/index.html", url.origin), request));
   },
 };
+
+const DOWNLOAD_NAME = /^brogang-(linux|darwin|windows)-(amd64|arm64)\.(tar\.gz|zip)$/;
+const DOWNLOAD_ALIASES = new Set(["SHA256SUMS.txt"]);
+
+async function fetchReleaseAsset(name) {
+  if (!DOWNLOAD_ALIASES.has(name) && !DOWNLOAD_NAME.test(name)) return null;
+  let upstream;
+  try {
+    upstream = await fetch(
+      `https://github.com/TechAdityaBRO/brogang-cli/releases/latest/download/${encodeURIComponent(name)}`,
+      { redirect: "follow" },
+    );
+  } catch {
+    return null;
+  }
+  if (!upstream.ok || !upstream.body) return null;
+  return new Response(upstream.body, {
+    status: 200,
+    headers: {
+      "Content-Type": contentTypeFor(name),
+      "Cache-Control": "public, max-age=3600",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+function contentTypeFor(name) {
+  if (name.endsWith(".zip")) return "application/zip";
+  if (name.endsWith(".tar.gz")) return "application/gzip";
+  if (name.endsWith(".txt")) return "text/plain; charset=utf-8";
+  return "application/octet-stream";
+}
 
 const MODEL = (env) =>
   env.BG_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
