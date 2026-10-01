@@ -241,6 +241,11 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Skip `wrangler whoami`: it lists every account on the token and
+          # returns 9109 unless Account Settings:Read is granted. The token is
+          # intentionally scoped to Cloudflare Pages:Edit only, and that scope
+          # is already proven sufficient for the deploy itself.
+          verify: false
           workingDirectory: worker
           command: pages deploy public --project-name brogangaicli
 
