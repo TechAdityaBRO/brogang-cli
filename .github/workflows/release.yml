@@ -261,11 +261,11 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # Skip `wrangler whoami`: it lists every account on the token and
-          # returns 9109 unless Account Settings:Read is granted. The token is
-          # intentionally scoped to Cloudflare Pages:Edit only, and that scope
-          # is already proven sufficient for the deploy itself.
-          verify: false
+          # wrangler-action has no token-verification step (it has no `verify`
+          # input), and the token is scoped to Cloudflare Pages:Edit only -
+          # confirmed against the live API: GET /accounts/.../pages/projects
+          # returns the brogangaicli project. GET /accounts/{id} itself returns
+          # 9109 without Account Settings:Read, so do not add a whoami here.
           workingDirectory: worker
           command: pages deploy public --project-name brogangaicli
 
