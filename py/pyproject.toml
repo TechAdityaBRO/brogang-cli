@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "brogang-cli"
+version = "0.1.0"
+description = "Free forever AI coding agent for your terminal. No signup, no API key, no cost."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "BRO GANG" }]
+keywords = ["ai", "cli", "coding-agent", "agent", "llm", "brogang"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# Optional convenience: the default provider is a hosted endpoint and needs no
+# third-party packages. Reserved for future baked-in integrations.
+all = []
+
+[project.urls]
+Homepage = "https://brogangaicli.pages.dev"
+Repository = "https://github.com/TechAdityaBRO/brogang-cli"
+Issues = "https://github.com/TechAdityaBRO/brogang-cli/issues"
+
+[project.scripts]
+brogang = "brogang.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/brogang"]
