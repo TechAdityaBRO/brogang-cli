@@ -57,6 +57,9 @@ Two ways — whichever is reachable for you:
 # 1. npm — works everywhere, no GitHub download needed
 npm install -g @brogang/cli
 
+#    yarn equivalent:
+yarn global add @brogang/cli
+
 # 2. GitHub Releases — prebuilt static binaries, no package manager
 #    https://github.com/TechAdityaBRO/brogang-cli/releases
 #    brogang-linux-amd64.tar.gz
@@ -77,6 +80,7 @@ cd brogang-cli && make build
 | Distribution | Good for |
 |:--|:--|
 | **npm** (`@brogang/cli`) | Anyone who can reach the npm registry but not GitHub |
+| **yarn** (`yarn global add @brogang/cli`) | Anyone who prefers Yarn for global packages |
 | **GitHub Releases** | A single static binary, no Node required |
 | **`go install`** | Already have a Go toolchain |
 
@@ -136,7 +140,8 @@ brogang-cli/
 
 The CLI ships two ways so a blocked or unavailable channel is never a dead end:
 
-- **npm** — `npm install -g @brogang/cli`, built and published by CI
+- **npm** - `npm install -g @brogang/cli`, built and published by CI
+- **yarn** - `yarn global add @brogang/cli`, same registry package
 - **GitHub Releases** — static binaries for six platform/arch combinations
 
 ### The free endpoint
