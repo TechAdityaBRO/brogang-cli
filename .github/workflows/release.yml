@@ -48,6 +48,7 @@ jobs:
         include:
           - { goos: linux,   goarch: amd64 }
           - { goos: linux,   goarch: arm64 }
+          - { goos: linux,   goarch: arm,   goarm: 7 }
           - { goos: windows, goarch: amd64 }
           - { goos: windows, goarch: arm64 }
           - { goos: darwin,  goarch: amd64 }
@@ -83,7 +84,11 @@ jobs:
           # Windows binaries are zipped, everything else ships as a tarball
           # so checksums and extraction behave the same on every platform.
           mkdir -p dist stage/"$name"
-          CGO_ENABLED=0 GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} \
+          # Build
+          if [ "${{ matrix.goarch }}" = "arm" ]; then
+            GOARM=7
+          fi
+          CGO_ENABLED=0 GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} ${GOARM:+GOARM=$GOARM} \
             go build -trimpath -ldflags "-s -w -X main.Version=$VERSION" \
             -o "stage/$name/$APP$ext" ./cmd/brogang
 
@@ -120,7 +125,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' \) \
+          find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' -o -name '*.deb' -o -name '*.rpm' \) \
             -exec cp {} dist/ \;
           cd dist
           sha256sum * > SHA256SUMS.txt
@@ -129,6 +134,50 @@ jobs:
         with:
           name: checksums
           path: dist/SHA256SUMS.txt
+
+  # Linux package-format uploads. A plain tarball is awkward for Raspberry
+  # Pi users, so we convert the same build to .deb (Debian/Ubuntu/Raspberry
+  # Pi OS) and .rpm (Fedora/openSUSE) here. Nothing is built from source
+  # twice: we unpack the already-built tarballs and re-package them.
+  linux_packages:
+    name: Linux .deb & .rpm
+    needs: [version, build, checksums]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Install packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev alien
+
+      - name: Create .deb and .rpm
+        shell: bash
+        run: |
+          set -e
+          mkdir -p pkgroot
+          for f in artifacts/brogang-linux-*.tar.gz; do
+            [ -e "$f" ] || continue
+            base=$(basename "$f" .tar.gz)
+            rm -rf "pkgroot/$base"
+            mkdir -p "pkgroot/$base/DEBIAN"
+            tar -C "pkgroot/$base" -xzf "$f"
+            printf 'Package: %s\nVersion: %s\nSection: utils\nPriority: optional\nArchitecture: all\nMaintainer: Aditya Kumar Sethi <pglove@atomicmail.io>\nDescription: Bro Gang AI CLI - AI coding agent for the terminal\n Free, open source AI coding agent.\n' "$base" "$VERSION" > "pkgroot/$base/DEBIAN/control"
+            dpkg-deb --build "pkgroot/$base" "${base}.deb"
+            alien --to-rpm --scripts "${base}.deb" || true
+          done
+          ls -l *.deb *.rpm
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: "*.deb *.rpm"
+          if-no-files-found: error
 
   release:
     name: Publish release
