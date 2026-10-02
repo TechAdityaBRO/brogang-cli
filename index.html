@@ -256,7 +256,7 @@ h1 em{font-style:normal;color:var(--pink)}
 /* ---------- install ----------
    opencode.ai puts its install command behind a tab strip: a tablist riding
    on top of a panel, active tab marked by a 2px rule rather than a pill.
-   We borrow that shape so npm / pnpm / yarn / go / winget all sit in one block
+   We borrow that shape so npm / pnpm / yarn / bun / go / pip / poetry / uv / winget all sit in one block
    instead of four stacked command bars. */
 .install{max-width:640px;margin:36px auto 0;text-align:left}
 .install .lbl{
@@ -610,6 +610,12 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
         <button class="tab" type="button" role="tab" aria-selected="false"
                 data-cmd="bun add -g @brogang/cli">bun</button>
         <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="pip install brogang-cli">pip</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="poetry add brogang-cli">poetry</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="uv pip install brogang-cli">uv</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
                 data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
       </div>
       <div class="panels">
@@ -923,6 +929,12 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
                 data-cmd="yarn global add @brogang/cli">yarn</button>
         <button class="tab" type="button" role="tab" aria-selected="false"
                 data-cmd="bun add -g @brogang/cli">bun</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="pip install brogang-cli">pip</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="poetry add brogang-cli">poetry</button>
+        <button class="tab" type="button" role="tab" aria-selected="false"
+                data-cmd="uv pip install brogang-cli">uv</button>
         <button class="tab" type="button" role="tab" aria-selected="false"
                 data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
       </div>
