@@ -71,21 +71,46 @@ jobs:
         # GitHub Packages will not accept a version that already exists, and
         # it always rejects 0.0.0, so both cases skip cleanly.
         run: |
+          # GitHub Packages requires the package scope to match the account
+          # that owns it. This repo lives under BRO-GANG, so the same code is
+          # published there as @BRO-GANG/cli; npmjs keeps @brogang/cli.
+          npm pkg set name="@BRO-GANG/cli"
           ver="$(node -p "require('./package.json').version")"
           code=$(curl -s -o /dev/null -w '%{http_code}' \
-            "https://npm.pkg.github.com/@brogang%2Fcli/$ver" || true)
+            "https://npm.pkg.github.com/@BRO-GANG%2Fcli/$ver" || true)
           if [ "$code" = "200" ]; then
             echo "::notice::$ver already on GitHub Packages - skipping"
             exit 0
           fi
-          pnpm publish --registry=https://npm.pkg.github.com --access public --no-git-checks
+          npm publish --registry=https://npm.pkg.github.com --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  pypi-gate:
+    name: Check PyPI prerequisites
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.gate.outputs.ready }}
+    steps:
+      - id: gate
+        env:
+          # Any non-empty value works: set the secret to "1" once PyPI trusts
+          # this repository as a publisher. Until then the job skips instead
+          # of turning the tag red.
+          PYPI_PUBLISH: ${{ secrets.PYPI_PUBLISH }}
+        shell: bash
+        run: |
+          if [ -z "$PYPI_PUBLISH" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::PYPI_PUBLISH secret not set - skipping the PyPI publish"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
   pypi:
     name: Publish to PyPI
-    needs: build
-    if: github.event_name == 'push'
+    needs: [build, pypi-gate]
+    if: needs.pypi-gate.outputs.ready == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
