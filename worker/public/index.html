@@ -599,43 +599,35 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
          one panel, active state marked by a rule. npm and pnpm sit first
          because that is how most people will actually reach this CLI. -->
     <div class="install" id="install">
-      <div class="lbl">Install — pick your package manager</div>
-      <div class="tabs" role="tablist" aria-label="Package manager">
-        <button class="tab" type="button" role="tab" aria-selected="true"
-                data-cmd="npm install -g @brogang/cli">npm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pnpm add -g @brogang/cli">pnpm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="yarn global add @brogang/cli">yarn</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="bun add -g @brogang/cli">bun</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pip install brogang-cli">pip</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="poetry add brogang-cli">poetry</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="uv pip install brogang-cli">uv</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
-      </div>
+      <div class="lbl">Install — one command</div>
       <div class="panels">
         <div class="panel on" role="tabpanel">
+          <p class="lbl" style="margin:0 0 8px">macOS / Linux</p>
           <div class="cmdbar">
-            <div class="t"><span class="pr">$</span> <span class="cmd">npm install -g @brogang/cli</span></div>
-            <button class="copy" data-copy="npm install -g @brogang/cli">Copy</button>
+            <div class="t"><span class="pr">$</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.sh | bash</span></div>
+            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.sh | bash">Copy</button>
+          </div>
+        </div>
+        <div class="panel on" role="tabpanel">
+          <p class="lbl" style="margin:16px 0 8px">Windows · PowerShell</p>
+          <div class="cmdbar">
+            <div class="t"><span class="pr">&gt;</span> <span class="cmd">irm https://brogangaicli.pages.dev/install.ps1 | iex</span></div>
+            <button class="copy" data-copy="irm https://brogangaicli.pages.dev/install.ps1 | iex">Copy</button>
+          </div>
+        </div>
+        <div class="panel on" role="tabpanel">
+          <p class="lbl" style="margin:16px 0 8px">Windows · CMD</p>
+          <div class="cmdbar">
+            <div class="t"><span class="pr">&gt;</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd</span></div>
+            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd">Copy</button>
           </div>
         </div>
       </div>
       <p class="alt">
-        Prefer a binary?
-        <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener">Download from GitHub Releases</a>
-        or read the <a href="https://github.com/TechAdityaBRO/brogang-cli#install" target="_blank" rel="noopener">full install docs</a>.
-      </p>
-      <p class="alt">
-        One-line install:
-        <code>curl -fsSL https://brogangaicli.pages.dev/install.sh | bash</code> (macOS/Linux) ·
-        <code>irm https://brogangaicli.pages.dev/install.ps1 | iex</code> (PowerShell) ·
-        <code>curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd</code> (CMD)
+        Prefer a package manager?
+        <a href="https://www.npmjs.com/package/@brogang/cli" target="_blank" rel="noopener">npm</a>,
+        <a href="https://github.com/TechAdityaBRO/brogang-cli#install" target="_blank" rel="noopener">pnpm / yarn / bun / pip / poetry / uv / go</a>
+        or grab a <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener">binary from GitHub Releases</a>.
       </p>
     </div>
 
@@ -925,30 +917,27 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px}
     <p class="lede">Install it, run it, and it works — no key, no account, no trial counting down.</p>
 
     <div class="install" style="margin-top:34px">
-      <div class="lbl">Install — pick your package manager</div>
-      <div class="tabs" role="tablist" aria-label="Package manager">
-        <button class="tab" type="button" role="tab" aria-selected="true"
-                data-cmd="npm install -g @brogang/cli">npm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pnpm add -g @brogang/cli">pnpm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="yarn global add @brogang/cli">yarn</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="bun add -g @brogang/cli">bun</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pip install brogang-cli">pip</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="poetry add brogang-cli">poetry</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="uv pip install brogang-cli">uv</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
-      </div>
+      <div class="lbl">Install — one command</div>
       <div class="panels">
         <div class="panel on" role="tabpanel">
+          <p class="lbl" style="margin:0 0 8px">macOS / Linux</p>
           <div class="cmdbar">
-            <div class="t"><span class="pr">$</span> <span class="cmd">npm install -g @brogang/cli</span></div>
-            <button class="copy" data-copy="npm install -g @brogang/cli">Copy</button>
+            <div class="t"><span class="pr">$</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.sh | bash</span></div>
+            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.sh | bash">Copy</button>
+          </div>
+        </div>
+        <div class="panel on" role="tabpanel">
+          <p class="lbl" style="margin:16px 0 8px">Windows · PowerShell</p>
+          <div class="cmdbar">
+            <div class="t"><span class="pr">&gt;</span> <span class="cmd">irm https://brogangaicli.pages.dev/install.ps1 | iex</span></div>
+            <button class="copy" data-copy="irm https://brogangaicli.pages.dev/install.ps1 | iex">Copy</button>
+          </div>
+        </div>
+        <div class="panel on" role="tabpanel">
+          <p class="lbl" style="margin:16px 0 8px">Windows · CMD</p>
+          <div class="cmdbar">
+            <div class="t"><span class="pr">&gt;</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd</span></div>
+            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd">Copy</button>
           </div>
         </div>
       </div>
