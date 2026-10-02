@@ -1,0 +1,104 @@
+name: Packages
+
+# Publishes the TypeScript CLI to the GitHub Packages npm registry and the
+# Python build to PyPI. Everything happens from CI on a tag or a manual run.
+#
+#   git tag v0.1.1 && git push origin v0.1.1
+#
+# GitHub Packages needs no extra secret: the automatic GITHUB_TOKEN is scoped
+# to this repository. PyPI uses trusted publishing (OIDC), so there is no
+# token to store either - but the project must be registered on PyPI with
+# this repository as the trusted publisher.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 0.1.0)"
+        required: true
+        default: "0.1.0"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: ts
+
+jobs:
+  build:
+    name: Build TypeScript package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: pnpm install
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Build
+        run: pnpm build
+
+  github-packages:
+    name: Publish to GitHub Packages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required so the automatic token can write a package to this repo.
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+      - name: Install
+        run: pnpm install
+      - name: Build
+        run: pnpm build
+      - name: Publish
+        # GitHub Packages will not accept a version that already exists, and
+        # it always rejects 0.0.0, so both cases skip cleanly.
+        run: |
+          ver="$(node -p "require('./package.json').version")"
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://npm.pkg.github.com/@brogang%2Fcli/$ver" || true)
+          if [ "$code" = "200" ]; then
+            echo "::notice::$ver already on GitHub Packages - skipping"
+            exit 0
+          fi
+          pnpm publish --registry=https://npm.pkg.github.com --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  pypi:
+    name: Publish to PyPI
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # OIDC token for PyPI trusted publishing.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build wheel and sdist
+        run: |
+          pip install build
+          python -m build py
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
