@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "@brogang/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Free forever AI coding agent for your terminal. No signup, no API key, no cost.",
   "keywords": [
     "ai",
@@ -86,3 +86,4 @@
     "typescript": "^5.7.0"
   }
 }
+

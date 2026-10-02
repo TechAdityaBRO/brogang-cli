@@ -1,4 +1,4 @@
-"""BRO GANG AI CLI - a free, open source AI coding agent for your terminal.
+﻿"""BRO GANG AI CLI - a free, open source AI coding agent for your terminal.
 
 Install with pip, poetry or uv:
 
@@ -11,7 +11,7 @@ and run:
     brogang
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .agent import Agent, CancelledError, MaxStepsError, SystemPrompt
 from .config import Config, default_config, load, save
@@ -50,3 +50,4 @@ __all__ = [
     "run_command_tool",
     "save",
 ]
+

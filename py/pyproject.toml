@@ -1,10 +1,10 @@
-[build-system]
+﻿[build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 name = "brogang-cli"
-version = "0.1.0"
+version = "0.1.1"
 description = "Free forever AI coding agent for your terminal. No signup, no API key, no cost."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -35,3 +35,4 @@ brogang = "brogang.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/brogang"]
+
