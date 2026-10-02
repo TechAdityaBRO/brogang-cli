@@ -51,30 +51,29 @@ Bro Gang AI CLI is a terminal coding agent...
 
 ## Install
 
-Two ways — whichever is reachable for you:
-
 ```bash
-# 1. npm — works everywhere, no GitHub download needed
-npm install -g @brogang/cli
+# YOLO — one line, any OS
+curl -fsSL https://brogangaicli.pages.dev/install.sh | bash          # macOS / Linux
+irm https://brogangaicli.pages.dev/install.ps1 | iex                # Windows PowerShell
 
-#    yarn equivalent:
-yarn global add @brogang/cli
-
-#    bun equivalent:
-bun add -g @brogang/cli
-
-# 2. GitHub Releases — prebuilt static binaries, no package manager
-#    https://github.com/TechAdityaBRO/brogang-cli/releases
-#    brogang-linux-amd64.tar.gz
-#    brogang-windows-amd64.zip
-#    brogang-darwin-arm64.tar.gz   (+ arm64/amd64 for each OS)
+# Package managers
+npm i -g @brogang/cli          # npm  (or pnpm / yarn / bun)
+uv pip install brogang-cli     # uv   (or pip / poetry)
+brew install TechAdityaBRO/tap/brogang   # macOS and Linux
+winget install BROGANG.BroGangCLI        # Windows
+go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest
 ```
+
+> [!TIP]
+> Prefer a raw binary? Grab the prebuilt static archive from
+> [GitHub Releases](https://github.com/TechAdityaBRO/brogang-cli/releases) —
+> `brogang-linux-amd64.tar.gz`, `brogang-windows-amd64.zip`,
+> `brogang-darwin-arm64.tar.gz` (+ arm64/amd64 for each OS). No runtime,
+> no node_modules.
 
 Or build from source:
 
 ```bash
-go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest
-
 git clone https://github.com/TechAdityaBRO/brogang-cli
 cd brogang-cli && make build
 ./bin/brogang
