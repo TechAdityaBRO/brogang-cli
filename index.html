@@ -1,1162 +1,1648 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bro Gang AI CLI | The free AI coding agent</title>
-<meta name="description" content="An open source AI coding agent for your terminal. Free models included — no signup, no API key, no cost. Or connect any provider you like.">
-<meta name="theme-color" content="#0a0a1a">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="BRO GANG CLI — A free forever AI coding agent for your terminal. No signup. No API key. Just run it.">
+<meta name="keywords" content="BRO GANG CLI, AI coding agent, terminal AI, Go CLI, Cloudflare Workers AI, Llama 3.3 70B, free AI, open source">
+<meta name="author" content="Aditya Kumar Sethi (TechAdityaBRO)">
+<meta name="theme-color" content="#0a0420">
+<title>BRO GANG CLI — Free Forever AI Coding Agent</title>
+
+<!-- Canonical & SEO -->
+<link rel="canonical" href="https://brogangaicli.pages.dev/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Bro Gang AI CLI | The free AI coding agent">
-<meta property="og:description" content="Free models included. No signup, no API key, no cost.">
+<meta property="og:site_name" content="BRO GANG CLI">
+<meta property="og:title" content="BRO GANG CLI — Free Forever AI Coding Agent">
+<meta property="og:description" content="No signup. No API key. Just run it.">
 <meta property="og:url" content="https://brogangaicli.pages.dev/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0a1a'/%3E%3Cpath d='M20 16h14a10 10 0 0 1 6 18 11 11 0 0 1-6 20H20z' fill='none' stroke='%23ff3b9e' stroke-width='5'/%3E%3Ccircle cx='44' cy='20' r='5' fill='%2300e5ff'/%3E%3C/svg%3E">
+<meta property="og:image" content="https://brogangaicli.pages.dev/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BRO GANG CLI — Free Forever AI Coding Agent">
+<meta name="twitter:description" content="No signup. No API key. Just run it.">
+<meta name="twitter:image" content="https://brogangaicli.pages.dev/og-image.png">
+<meta name="twitter:creator" content="@TechAdityaBRO">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-:root{
-  --pink:#ff3b9e; --cyan:#00e5ff; --green:#5dd65d;
-  --bg:#0a0a1a; --panel:#0d0d1e; --panel-2:#101026;
-  --line:#1c1c38; --line-2:#27274d;
-  --ink:#f2f3f8; --dim:#8b8ba6; --dimmer:#5f5f80;
-  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --max:1140px;
-  /* Borrowed from atomic.chat: hairlines as white-alpha rather than a solid
-     hex, so borders stay the same weight over the pink/cyan glow as over the
-     flat background. Its --border is #ffffff14 (8%). */
-  --hair:rgba(255,255,255,.08);
-  --hair-2:rgba(255,255,255,.15);
-  /* atomic.chat's two curves: the UI easing and the overshooting spring it
-     uses on the logo tile. */
-  --ease:cubic-bezier(.4,0,.2,1);
-  --spring:cubic-bezier(.34,1.56,.64,1);
-  /* bleibtgleich.dev ships its motion as named durations + curves rather than
-     magic numbers, so every transition in the page reads the same vocabulary. */
-  --dur-s:.2s; --dur-m:.4s; --dur-l:.8s;
-  --ease-out:cubic-bezier(.25,1,.5,1);
-  --ease-io:cubic-bezier(.76,0,.24,1);
-  /* boc.studio leans on easeOutQuint for its marquees and card reveals. */
-  --ease-quint:cubic-bezier(.22,1,.36,1);
-  /* Cerebrium's back-out curve — overshoots slightly, good for badges. */
-  --ease-back:cubic-bezier(.175,.885,.32,1.275);
-  /* Radii ladder: opencode.ai caps UI chrome at 4–6px, atomic.chat goes
-     full pill on primary actions. We keep both ends. */
-  --r-sm:6px; --r-md:10px; --r-lg:14px; --r-pill:9999px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-/* codapress.co.uk reserves the gutter from the first paint so the page never
-   lurches sideways when it grows past the fold. */
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-y:scroll;scrollbar-gutter:stable}
-body{
-  background:var(--bg);color:var(--ink);font-family:var(--sans);
-  line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
-}
-/* atomic.chat ships an explicit focus ring; keep keyboard users visible. */
-:focus-visible{
-  outline:.125rem solid var(--cyan);outline-offset:.125rem;border-radius:4px;
+/* ============================================================
+   BRO GANG CLI — Bang Mach Theme
+   Neon pink + cyan · Deep space purple
+   ============================================================ */
+:root {
+  --pink: #ff3b9e;
+  --pink-dim: #ff7bbf;
+  --cyan: #00e5ff;
+  --cyan-dim: #67e8f9;
+  --purple: #8b4dff;
+  --purple-500: #6d28d9;
+  --green: #10b981;
+  --green-light: #34d399;
+  --yellow: #ffcb05;
+  --orange: #fb923c;
+  --red: #ef4444;
+  --bg-0: #05010f;
+  --bg-1: #0a0420;
+  --bg-2: #12063a;
+  --surface: #140a38;
+  --border: rgba(255, 59, 158, 0.18);
+  --border-cyan: rgba(0, 229, 255, 0.25);
+  --text: #e8e4f5;
+  --text-dim: #b8aee0;
+  --text-muted: #7a6fa5;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* opencode.ai styles ::selection with a design token instead of letting the
-   browser pick its default blue. */
-::selection{background:rgba(255,59,158,.28);color:#fff}
-::-moz-selection{background:rgba(255,59,158,.28);color:#fff}
-
-/* Cerebrium balances its headings so long lines don't leave a stubby last
-   word hanging. Cheap, and it visibly improves the hero. */
-h1,h2{text-wrap:balance}
-
-/* ---------- background column grid (bleibtgleich.dev) ----------
-   Eight faint vertical rules behind everything. It reads as scaffolding —
-   the thing that makes awwwards pages feel measured rather than floated. */
-.gridlines{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  max-width:var(--max);margin:0 auto;padding:0 24px;
-  display:grid;grid-template-columns:repeat(8,1fr);
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg-1);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
 }
-.gridlines i{border-left:1px solid rgba(255,255,255,.035)}
-.gridlines i:last-child{border-right:1px solid rgba(255,255,255,.035)}
-@media (max-width:760px){.gridlines{display:none}}
-
-/* ---------- scroll reveal (bleibtgleich.dev hides until JS confirms) ----------
-   If JS never runs, nothing is hidden — the observer only adds the class. */
-[data-rv]{opacity:1}
-.js [data-rv]{opacity:0;transform:translateY(18px);
-  transition:opacity var(--dur-l) var(--ease-out),transform var(--dur-l) var(--ease-out)}
-.js [data-rv].in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){
-  .js [data-rv]{opacity:1;transform:none;transition:none}
-  html{scroll-behavior:auto}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 59, 158, 0.12), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(0, 229, 255, 0.10), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(139, 77, 255, 0.15), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: ambientShift 24s ease-in-out infinite alternate;
 }
-
-/* ---------- reading progress (daoism.systems) ----------
-   A 2px rule pinned to the top edge that fills as you read. Sits above the
-   sticky header, so it survives the header hiding itself. */
-.progress{
-  position:fixed;top:0;left:0;right:0;height:2px;z-index:120;
-  pointer-events:none;background:rgba(255,255,255,.06);
+@keyframes ambientShift {
+  0%   { transform: scale(1) rotate(0deg); }
+  50%  { transform: scale(1.1) rotate(3deg); }
+  100% { transform: scale(1.05) rotate(-2deg); }
 }
-.progress i{
-  display:block;height:100%;width:0%;
-  background:linear-gradient(90deg,var(--pink),var(--cyan));
-  transition:width .1s linear;
-}
-
-/* ---------- cursor (codapress.co.uk) ----------
-   The pointer is hidden on precise devices and replaced by a small filled
-   square with a larger outlined square trailing it, blended with difference
-   so it inverts whatever it crosses. Both are hard-edged squares, which
-   doubles as the pixel cue from minecraft.net. Never shown on touch, and
-   never under prefers-reduced-motion. */
-.cursor{
-  position:fixed;inset:0;z-index:200;pointer-events:none;
-  mix-blend-mode:difference;opacity:0;transition:opacity .25s var(--ease);
-}
-.cursor.on{opacity:1}
-.cursor span{
-  position:absolute;top:0;left:0;display:block;
-  transform:translate(-50%,-50%);
-  transition:width .2s var(--ease),height .2s var(--ease),background-color .2s var(--ease);
-}
-.cur-o{width:30px;height:30px;border:1.5px solid #fff}
-.cur-d{width:6px;height:6px;background:#fff}
-.cursor.is-a .cur-o{width:54px;height:54px;background:rgba(255,255,255,.9);border-color:transparent}
-.cursor.is-a .cur-d{opacity:0}
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  body,a,button{cursor:none}
-}
-@media (hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){
-  .cursor{display:none}
-}
-
-/* ---------- rotating rings (phobos.com.au) ----------
-   Three dotted circles turning at 120s / 90s / 150s, one counter-rotating.
-   Pure SVG + CSS, no library, and it costs nothing while off-screen. */
-.cta{position:relative;overflow:hidden}
-.rings{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:min(780px,132vw);aspect-ratio:1;pointer-events:none;z-index:0;
-  opacity:.42;
-}
-.rings circle{
-  fill:none;stroke:rgba(255,255,255,.9);stroke-width:1;
-  stroke-dasharray:1.5 10;vector-effect:non-scaling-stroke;
-  transform-box:view-box;transform-origin:center;
-}
-.rings .r0{animation:ring-spin 120s linear infinite}
-.rings .r1{animation:ring-spin 90s linear infinite reverse;stroke:rgba(255,59,158,.9)}
-.rings .r2{animation:ring-spin 150s linear infinite;stroke:rgba(0,229,255,.9)}
-@keyframes ring-spin{to{transform:rotate(360deg)}}
-.cta .wrap{position:relative;z-index:1}
-@media (prefers-reduced-motion:reduce){.rings circle{animation:none}}
-
-/* ---------- pixel rule (minecraft.net) ----------
-   Alternating 8px blocks in brand colour — the block-edge motif, used once
-   as the hand-off between the page and the footer. */
-.pixdiv{
-  height:8px;
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
   background-image:
-    repeating-linear-gradient(90deg,rgba(255,59,158,.75) 0 8px,transparent 8px 16px),
-    repeating-linear-gradient(90deg,transparent 0 8px,rgba(0,229,255,.75) 8px 16px);
-  background-size:16px 8px;
-  background-repeat:repeat-x;
+    linear-gradient(rgba(255, 59, 158, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 59, 158, 0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
-::selection{background:var(--pink);color:#0a0a1a}
-a{color:inherit;text-decoration:none}
-code,kbd{font-family:var(--mono)}
-.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-/* Sit content above the fixed column rules, which then only show through
-   elements that carry no background of their own. */
-main,footer{position:relative;z-index:1}
+.app { position: relative; z-index: 1; }
 
-/* ---------- nav ----------
-   atomic.chat's header: transparent at rest, then a 24px blur at 180%
-   saturation with a hairline border once you scroll, padding easing down
-   on the same curve. opencode.ai keeps the same idea (sticky, hairline
-   bottom border) but flatter — we land between the two. */
-.nav{
-  position:sticky;top:0;z-index:60;
-  background:rgba(10,10,26,.55);
-  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
-  border-bottom:1px solid transparent;
-  /* phobos.com.au: the bar retracts out of view on the way down and
-     returns the moment you scroll back up, on a 450ms curve. */
-  transition:transform .45s var(--ease),
-             background-color var(--dur-m) var(--ease),
-             border-color var(--dur-m) var(--ease);
+/* ============================================================
+   SKELETONS
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255, 59, 158, 0.05) 0%,
+    rgba(255, 59, 158, 0.12) 50%,
+    rgba(255, 59, 158, 0.05) 100%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+  border-radius: 8px;
+  display: inline-block;
 }
-.nav.hide{transform:translateY(-100%)}
-.nav.stuck{
-  background:rgba(10,10,26,.88);
-  border-bottom-color:var(--hair);
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
-.nav-in{
-  max-width:var(--max);margin:0 auto;padding:20px 24px;display:flex;
-  align-items:center;gap:30px;
-  transition:padding var(--dur-m) var(--ease);
+.skeleton-line { height: 12px; width: 100%; margin-bottom: 8px; }
+.skeleton-line.short { width: 60%; }
+.skeleton-line.tiny { width: 40%; height: 10px; }
+.skeleton-block { width: 100%; height: 60px; border-radius: 12px; }
+.skeleton-circle { width: 40px; height: 40px; border-radius: 10px; }
+.skeleton-card {
+  background: linear-gradient(160deg, rgba(30, 16, 84, 0.5), rgba(20, 10, 56, 0.8));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem;
 }
-.nav.stuck .nav-in{padding:13px 24px}
-.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;letter-spacing:-.01em}
-.brand .mark{
-  width:26px;height:26px;border-radius:var(--r-sm);flex:none;background:#12122a;
-  border:1px solid var(--line-2);display:grid;place-items:center;
-  transition:box-shadow .3s,transform .6s var(--spring),border-color .3s;
-}
-/* atomic.chat's logo micro-interaction: the tile springs 45° and picks up
-   a glow. Small, but it is the first thing people notice on hover. */
-.brand:hover .mark{
-  transform:rotate(45deg);border-color:rgba(255,59,158,.55);
-  box-shadow:0 0 20px rgba(255,59,158,.35);
-}
-.brand .mark svg{width:14px;height:14px}
-.brand .c{color:var(--cyan)} .brand .p{color:var(--pink)}
-.nav-links{display:flex;gap:26px;margin-left:auto;align-items:center}
-.nav-links a.lnk{
-  position:relative;font-size:14px;color:var(--dim);
-  transition:color var(--dur-s) var(--ease);padding-bottom:2px;
-}
-/* atomic.chat draws the underline in with a scaleX from the left edge on
-   hover, and lets it retract on the way out. */
-.nav-links a.lnk::after{
-  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
-  background:currentColor;transform:scaleX(0);transform-origin:left;
-  transition:transform .25s var(--ease);
-}
-.nav-links a.lnk:hover{color:var(--ink)}
-.nav-links a.lnk:hover::after{transform:scaleX(1)}
-.btn{
-  display:inline-flex;align-items:center;gap:8px;justify-content:center;
-  padding:10px 20px;border-radius:var(--r-pill);font-size:14px;font-weight:600;
-  border:1px solid transparent;cursor:pointer;font-family:inherit;
-  /* atomic.chat's .btn transition — all, .2s, ease-out. */
-  transition:all var(--dur-s) ease-out;
-}
-.btn-primary{background:var(--pink);color:#140109}
-.btn-primary:hover{background:#ff55ae;transform:translateY(-1px);
-  box-shadow:0 8px 24px rgba(255,59,158,.32)}
-.btn-primary:active{transform:translateY(0)}
-.btn-ghost{border-color:var(--hair-2);color:var(--ink);background:transparent}
-.btn-ghost:hover{border-color:var(--dim);background:rgba(255,255,255,.05);
-  transform:translateY(-1px)}
-.burger{display:none;margin-left:auto;background:none;border:1px solid var(--line-2);border-radius:7px;color:var(--ink);padding:6px 11px;cursor:pointer;font-family:var(--mono);font-size:14px}
+.skeleton-hidden { opacity: 0; transition: opacity 0.4s ease; }
+.skeleton-visible { opacity: 1; }
 
-/* ---------- hero ---------- */
-.hero{padding:110px 0 70px;text-align:center}
-h1{
-  font-size:clamp(38px,6.6vw,76px);line-height:1.03;letter-spacing:-.045em;
-  font-weight:700;max-width:16ch;margin:0 auto;
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  padding: 1rem 2rem;
+  background: rgba(10, 4, 32, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
 }
-h1 em{font-style:normal;color:var(--pink)}
-.lede{
-  font-size:clamp(16px,1.9vw,19px);color:var(--dim);
-  max-width:600px;margin:26px auto 0;line-height:1.6;
+.navbar-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem; flex-wrap: wrap;
 }
-/* ---------- install ----------
-   opencode.ai puts its install command behind a tab strip: a tablist riding
-   on top of a panel, active tab marked by a 2px rule rather than a pill.
-   We borrow that shape so npm / pnpm / yarn / bun / go / pip / poetry / uv / winget all sit in one block
-   instead of four stacked command bars. */
-.install{max-width:640px;margin:36px auto 0;text-align:left}
-.install .lbl{
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--dimmer);text-align:center;margin-bottom:13px;
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 1.1rem;
+  color: var(--text); text-decoration: none;
 }
-.tabs{
-  display:flex;align-items:stretch;gap:4px;overflow-x:auto;
-  background:var(--panel);border:1px solid var(--line);border-bottom:none;
-  border-radius:var(--r-md) var(--r-md) 0 0;padding:0 10px;
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--pink), var(--cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; color: white;
+  box-shadow: 0 0 20px rgba(255, 59, 158, 0.5);
+  transition: transform 0.5s var(--ease);
 }
-.tab{
-  appearance:none;background:none;border:0;border-bottom:2px solid transparent;
-  padding:15px 14px;margin:0;cursor:pointer;color:var(--dim);flex:none;
-  font-family:var(--mono);font-size:13px;line-height:1;white-space:nowrap;
-  transition:color var(--dur-s) var(--ease),border-color var(--dur-s) var(--ease);
+.nav-brand:hover .brand-mark { transform: rotate(-10deg) scale(1.1); }
+.nav-links { display: flex; gap: 1.6rem; align-items: center; flex-wrap: wrap; }
+.nav-links a {
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.88rem; font-weight: 500;
+  transition: color 0.25s ease; position: relative;
 }
-.tab:hover{color:var(--ink)}
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--pink)}
-.panels{
-  background:#07071a;border:1px solid var(--line);
-  border-radius:0 0 var(--r-md) var(--r-md);padding:14px;
+.nav-links a:hover { color: var(--cyan); }
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -6px; left: 0;
+  width: 0; height: 1.5px;
+  background: linear-gradient(90deg, var(--pink), var(--cyan));
+  transition: width 0.3s var(--ease);
 }
-.panel{display:none}
-.panel.on{display:block;animation:panel-in .18s ease}
-@keyframes panel-in{from{opacity:0}to{opacity:1}}
-.install .alt{
-  margin-top:14px;text-align:center;font-family:var(--mono);
-  font-size:12.5px;color:var(--dimmer);
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white !important;
+  padding: 0.5rem 1.2rem; border-radius: 8px;
+  font-weight: 600; font-size: 0.82rem !important;
+  box-shadow: 0 4px 20px rgba(255, 59, 158, 0.4);
+  transition: transform 0.25s var(--ease);
+  font-family: 'JetBrains Mono', monospace;
 }
-.install .alt a{color:var(--cyan);border-bottom:1px solid rgba(0,229,255,.35)}
-.install .alt a:hover{border-bottom-color:var(--cyan)}
+.nav-cta:hover { transform: translateY(-2px); color: white !important; }
+.nav-cta::after { display: none; }
 
-.cmdbar{
-  display:flex;align-items:center;gap:12px;
-  font-family:var(--mono);font-size:13.5px;text-align:left;
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero { padding: 5rem 2rem 4rem; text-align: center; }
+.hero-inner { max-width: 900px; margin: 0 auto; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px; border-radius: 999px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid var(--border-cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; font-weight: 500;
+  color: var(--cyan); margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
 }
-.cmdbar .t{flex:1;overflow-x:auto;white-space:nowrap;color:var(--ink)}
-.cmdbar .t .pr{color:var(--cyan)}
-.copy{
-  background:var(--panel-2);border:1px solid var(--line-2);color:var(--dim);
-  border-radius:6px;padding:6px 12px;font-family:var(--mono);font-size:11px;
-  cursor:pointer;transition:.15s;flex:none;text-transform:uppercase;letter-spacing:.08em;
-  /* minecraft.net's button physics: a hard offset block underneath that the
-     key physically presses into. */
-  box-shadow:0 3px 0 rgba(0,0,0,.6);
+.hero-badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green-light);
+  box-shadow: 0 0 12px var(--green-light);
+  animation: liveDot 2s ease-in-out infinite;
 }
-.copy:hover{color:var(--ink);border-color:var(--dim)}
-.copy:active{transform:translateY(3px);box-shadow:0 0 0 rgba(0,0,0,.6)}
-.copy.ok{color:var(--green);border-color:var(--green)}
-.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-.hero-note{margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--dimmer)}
+@keyframes liveDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff 0%, var(--pink-dim) 40%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 40px rgba(255, 59, 158, 0.3));
+}
+.hero h1 .italic {
+  font-style: italic; font-weight: 300;
+  background: linear-gradient(135deg, var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-sub {
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  color: var(--text-dim);
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+.hero-buttons {
+  display: flex; justify-content: center; gap: 0.9rem;
+  flex-wrap: wrap; margin-bottom: 1.5rem;
+}
+.hero-meta {
+  display: flex; justify-content: center; gap: 1.5rem;
+  flex-wrap: wrap; font-size: 0.78rem; color: var(--text-muted);
+}
+.hero-meta span, .hero-meta a {
+  display: flex; align-items: center; gap: 6px;
+}
+.hero-meta a {
+  color: var(--cyan); text-decoration: none;
+  transition: color 0.25s;
+}
+.hero-meta a:hover { color: var(--pink); }
 
-/* ---------- terminal ---------- */
-.term-shell{max-width:920px;margin:64px auto 0;text-align:left}
-.term{
-  background:#050512;border:1px solid var(--line-2);border-radius:12px;overflow:hidden;
-  box-shadow:0 40px 100px rgba(0,0,0,.6);
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 0.9rem 1.6rem; border-radius: 10px;
+  font-size: 0.88rem; font-weight: 600;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: all 0.3s var(--ease);
+  font-family: 'Inter', sans-serif;
 }
-.term-bar{
-  display:flex;align-items:center;gap:7px;padding:12px 16px;
-  background:#0a0a1c;border-bottom:1px solid var(--line);
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  box-shadow: 0 8px 30px rgba(255, 59, 158, 0.4);
 }
-.tl{width:10px;height:10px;border-radius:50%}
-.tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
-.term-bar .title{
-  margin-left:12px;font-family:var(--mono);font-size:12px;color:var(--dimmer);
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(255, 59, 158, 0.6);
 }
-.term-body{
-  padding:22px 24px;font-family:var(--mono);font-size:13.5px;line-height:1.85;
-  overflow-x:auto;white-space:pre;color:var(--dim);
+.btn-secondary {
+  background: rgba(0, 229, 255, 0.08);
+  color: var(--cyan);
+  border: 1px solid var(--border-cyan);
+  backdrop-filter: blur(10px);
 }
-.term-body .pr{color:var(--cyan)}
-.term-body .pk{color:var(--pink)}
-.term-body .gn{color:var(--green)}
-.term-body .wh{color:var(--ink)}
-.term-body .gr{color:var(--dimmer)}
-.cap{
-  font-family:var(--mono);font-size:12px;color:var(--dimmer);
-  margin-top:14px;text-align:left;
+.btn-secondary:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--cyan);
+  transform: translateY(-3px);
 }
-.cap b{color:var(--pink);font-weight:400}
-
-/* Cerebrium animates its feature terminal one line at a time: each line
-   carries an index, and the delay is derived from it rather than written
-   out by hand. */
-.term-body .ln{display:block}
-.js .term-body .ln{opacity:0}
-.term.is-visible .term-body .ln{
-  animation:ln-in .28s ease-out forwards;
-  animation-delay:calc(var(--i,0) * 80ms);
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
 }
-@keyframes ln-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-/* ---------- marquee (boc.studio) ----------
-   Their ticker tokens — gap from a fluid clamp, durations in the 60–120s
-   range so nothing reads as a slot machine. Edge-masked so items dissolve
-   into the gutters instead of clipping hard. The spacing is a margin rather
-   than a flex gap so the duplicated half measures exactly 50% and the loop
-   hands over without a jump. */
-.marquee{
-  overflow:hidden;padding:20px 0;
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
-}
-.mq-track{
-  display:flex;width:max-content;
-  animation:mq 78s linear infinite;
-}
-.marquee:hover .mq-track{animation-play-state:paused}
-.mq-track>*{
-  flex:none;margin-right:clamp(2rem,1.5rem + 1.5vw,3.125rem);
-  font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--dimmer);white-space:nowrap;
-  display:inline-flex;align-items:center;
-  column-gap:clamp(2rem,1.5rem + 1.5vw,3.125rem);
-}
-.mq-track>*::after{content:"/";color:var(--line-2)}
-@keyframes mq{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){
-  .mq-track{animation:none}
-  .term.is-visible .term-body .ln{animation:none;opacity:1}
+.btn-ghost:hover {
+  color: var(--pink);
+  border-color: var(--pink);
+  background: rgba(255, 59, 158, 0.08);
 }
 
-/* ---------- sections ---------- */
-section{padding:96px 0}
-.rule{border-top:1px solid var(--line)}
-.eyebrow{
-  font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--pink);margin-bottom:18px;
+/* ============================================================
+   SECTION BASE
+   ============================================================ */
+.section { padding: 4.5rem 2rem; position: relative; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 2.5rem; }
+.section-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 1rem; padding: 4px 12px;
+  background: rgba(255, 59, 158, 0.08);
+  border: 1px solid var(--border);
+  border-radius: 6px;
 }
-h2{font-size:clamp(28px,3.9vw,44px);letter-spacing:-.035em;line-height:1.12;font-weight:700}
-h2.center{text-align:center}
-.prose{max-width:660px;margin-top:22px;color:var(--dim);font-size:17px}
-.prose.center{margin-left:auto;margin-right:auto;text-align:center}
-.prose b{color:var(--ink);font-weight:600}
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+.section-title .grad {
+  background: linear-gradient(135deg, var(--pink), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.section-sub {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
 
-/* ---------- stats ---------- */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;text-align:center}
-.stat .n{
-  font-family:var(--mono);font-size:clamp(40px,6vw,64px);font-weight:700;
-  letter-spacing:-.05em;line-height:1;
+/* ============================================================
+   TERMINAL DEMO
+   ============================================================ */
+.terminal {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #0a0420;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
-.stat:nth-child(1) .n{color:var(--pink)}
-.stat:nth-child(2) .n{color:var(--cyan)}
-.stat:nth-child(3) .n{color:var(--green)}
-.stat .f{font-family:var(--mono);font-size:12px;color:var(--dimmer);margin-top:14px}
-.stat .d{font-size:14.5px;color:var(--dim);margin-top:8px}
+.terminal-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0.7rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid var(--border);
+}
+.install-dots { display: flex; gap: 6px; }
+.install-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.install-dots span:nth-child(1) { background: #ff5f56; }
+.install-dots span:nth-child(2) { background: #ffbd2e; }
+.install-dots span:nth-child(3) { background: #27c93f; }
+.terminal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+.terminal-body {
+  padding: 1.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--text);
+  min-height: 320px;
+}
+.terminal-body .ln { display: block; }
+.terminal-body .prompt { color: var(--pink); }
+.terminal-body .cmd { color: var(--cyan); }
+.terminal-body .out { color: var(--text-dim); }
+.terminal-body .tool { color: var(--yellow); }
+.terminal-body .ai { color: var(--green-light); }
+.terminal-body .cursor {
+  display: inline-block;
+  width: 8px; height: 14px;
+  background: var(--pink);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 
-/* ---------- features ---------- */
-.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.f{background:var(--bg);padding:32px 28px;transition:background .2s}
-.f:hover{background:var(--panel)}
-.f .ico{width:34px;height:34px;margin-bottom:18px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line-2);background:#0f0f24}
-.f .ico svg{width:17px;height:17px;fill:none;stroke:var(--pink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.f:nth-child(3n+2) .ico svg{stroke:var(--cyan)}
-.f:nth-child(3n) .ico svg{stroke:var(--green)}
-.f h3{font-size:16.5px;font-weight:600;letter-spacing:-.015em;margin-bottom:9px}
-.f p{font-size:14.5px;color:var(--dim)}
-.f code{font-size:13px;color:var(--cyan)}
+/* ============================================================
+   FEATURES
+   ============================================================ */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.4rem;
+  margin-top: 2rem;
+}
+.feature-card {
+  background: linear-gradient(160deg, rgba(30, 16, 84, 0.6), rgba(20, 10, 56, 0.8));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.7rem 1.5rem;
+  transition: all 0.4s var(--ease);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pink), var(--cyan), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-cyan);
+  box-shadow: 0 20px 50px rgba(0, 229, 255, 0.15);
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 59, 158, 0.15), rgba(0, 229, 255, 0.15));
+  border: 1px solid var(--border-cyan);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 1.1rem;
+  transition: transform 0.5s var(--ease);
+}
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(-6deg);
+}
+.feature-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.feature-card p {
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.feature-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 0.9rem;
+  letter-spacing: 0.5px;
+}
+.tag-free {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--green-light);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+.tag-new {
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--cyan);
+  border: 1px solid var(--border-cyan);
+}
+.tag-beta {
+  background: rgba(251, 146, 60, 0.15);
+  color: var(--orange);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
 
-/* ---------- split ---------- */
-.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-.code{
-  background:#07071a;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+/* ============================================================
+   PROVIDERS
+   ============================================================ */
+.providers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
 }
-.code .hd{
-  padding:11px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);
-  font-size:11.5px;color:var(--dimmer);letter-spacing:.08em;text-transform:uppercase;
+.provider {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  transition: all 0.35s var(--ease);
 }
-.code pre{padding:20px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.8;color:var(--dim)}
-.code .c{color:var(--dimmer)}
-.code .k{color:var(--pink)}
-.code .s{color:var(--cyan)}
-.code .g{color:var(--green)}
-.list{list-style:none;margin-top:26px;display:grid;gap:16px}
-.list li{display:flex;gap:14px;font-size:15.5px;color:var(--dim);line-height:1.55}
-.list li .b{
-  flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--line-2);
-  display:grid;place-items:center;font-family:var(--mono);font-size:10px;color:var(--pink);
-  margin-top:3px;
+.provider:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-cyan);
+  background: rgba(0, 229, 255, 0.05);
 }
-.list li b{color:var(--ink);font-weight:600}
+.provider-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+.provider-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+.provider-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.badge-free {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--green-light);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+.badge-byok {
+  background: rgba(251, 146, 60, 0.15);
+  color: var(--orange);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+.badge-local {
+  background: rgba(139, 77, 255, 0.15);
+  color: var(--purple);
+  border: 1px solid rgba(139, 77, 255, 0.3);
+}
+.provider.featured {
+  border-color: var(--pink);
+  background: linear-gradient(160deg, rgba(255, 59, 158, 0.1), rgba(0, 229, 255, 0.05));
+  box-shadow: 0 0 30px rgba(255, 59, 158, 0.15);
+}
 
-/* ---------- providers ---------- */
-.tbl{border:1px solid var(--line);border-radius:12px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:15px}
-th{
-  text-align:left;padding:14px 20px;font-family:var(--mono);font-size:11px;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);font-weight:500;
-  background:#08081a;border-bottom:1px solid var(--line);
+/* ============================================================
+   INSTALL — Package Manager Grid (OpenCode style)
+   ============================================================ */
+.install-hero {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  background: linear-gradient(160deg, rgba(30, 16, 84, 0.9), rgba(20, 10, 56, 0.95));
+  border: 2px solid var(--pink);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 60px rgba(255, 59, 158, 0.25),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
-td{padding:15px 20px;border-bottom:1px solid var(--line);color:var(--dim)}
-tr:last-child td{border-bottom:none}
-tbody tr:hover{background:rgba(255,255,255,.018)}
-td.k{font-family:var(--mono);color:var(--ink);font-size:13.5px}
-td.k .d{color:var(--pink);font-size:11px;margin-left:9px}
-.tag{
-  display:inline-block;padding:2px 10px;border-radius:5px;font-family:var(--mono);
-  font-size:11.5px;border:1px solid var(--line-2);color:var(--dim);background:#0b0b1f;
+.install-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--cyan), var(--pink));
+  background-size: 200% auto;
+  animation: heroShimmer 3s linear infinite;
 }
-.tag.free{color:var(--green);border-color:rgba(93,214,93,.32);background:rgba(93,214,93,.06)}
+@keyframes heroShimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+.install-hero-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.9rem 1.2rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid var(--border);
+}
+.install-hero-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.install-hero-badge {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 59, 158, 0.4);
+}
+.install-tabs {
+  display: flex;
+  gap: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid var(--border);
+}
+.install-tab {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-bottom: 2px solid transparent;
+}
+.install-tab:hover {
+  color: var(--cyan);
+  background: rgba(0, 229, 255, 0.05);
+}
+.install-tab.active {
+  color: var(--pink);
+  border-bottom-color: var(--pink);
+  background: rgba(255, 59, 158, 0.08);
+}
+.install-tab i { font-size: 0.95rem; }
+.install-hero-body { padding: 1.4rem 1.6rem; }
+.install-hero-cmd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.install-hero-cmd::-webkit-scrollbar { height: 4px; }
+.install-hero-cmd::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: 4px;
+}
+.install-hero-prompt {
+  color: var(--pink);
+  user-select: none;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.install-hero-text {
+  color: var(--cyan);
+  white-space: nowrap;
+  flex: 1;
+  font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+.install-hero-copy {
+  background: rgba(255, 59, 158, 0.1);
+  border: 1px solid var(--pink);
+  color: var(--pink);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: all 0.2s var(--ease);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.install-hero-copy:hover {
+  background: var(--pink);
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 59, 158, 0.5);
+}
+.install-hero-copy.copied {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--green-light);
+  color: var(--green-light);
+}
+.pm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.pm-card {
+  background: linear-gradient(160deg, rgba(30, 16, 84, 0.5), rgba(20, 10, 56, 0.8));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem;
+  transition: all 0.35s var(--ease);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  position: relative;
+  overflow: hidden;
+}
+.pm-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pink), var(--cyan), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.pm-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-cyan);
+  box-shadow: 0 15px 40px rgba(0, 229, 255, 0.12);
+}
+.pm-card:hover::before { opacity: 1; }
+.pm-card-primary {
+  border-color: rgba(255, 59, 158, 0.35);
+  background: linear-gradient(160deg, rgba(255, 59, 158, 0.08), rgba(20, 10, 56, 0.85));
+}
+.pm-card-primary:hover {
+  border-color: var(--pink);
+  box-shadow: 0 15px 40px rgba(255, 59, 158, 0.2);
+}
+.pm-head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.pm-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.pm-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pm-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.pm-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.pm-cmd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.pm-cmd::-webkit-scrollbar { height: 3px; }
+.pm-cmd::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: 3px;
+}
+.pm-prompt {
+  color: var(--pink);
+  user-select: none;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.pm-text {
+  color: var(--text);
+  white-space: nowrap;
+  flex: 1;
+}
+.pm-copy {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.2s var(--ease);
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+.pm-copy:hover {
+  color: var(--pink);
+  background: rgba(255, 59, 158, 0.1);
+}
+.pm-copy.copied { color: var(--green-light); }
+.pm-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--cyan);
+  text-decoration: none;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border-cyan);
+  border-radius: 8px;
+  background: rgba(0, 229, 255, 0.05);
+  transition: all 0.25s var(--ease);
+  justify-content: center;
+}
+.pm-link:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+}
+.pm-footnote {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.pm-footnote i { color: var(--pink); }
 
-/* ---------- faq ---------- */
-.faq{max-width:780px;margin:0 auto}
-.q{
-  border-bottom:1px solid var(--line);padding:0;
+/* ============================================================
+   CTA BOX
+   ============================================================ */
+.cta-box {
+  background: linear-gradient(135deg, rgba(255, 59, 158, 0.15), rgba(0, 229, 255, 0.1));
+  border: 1px solid var(--border-cyan);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
 }
-.q button{
-  width:100%;background:none;border:none;color:var(--ink);text-align:left;
-  padding:24px 40px 24px 0;font-size:17px;font-weight:500;cursor:pointer;
-  font-family:inherit;position:relative;letter-spacing:-.01em;
+.cta-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 59, 158, 0.2), transparent 60%);
+  pointer-events: none;
 }
-.q button::after{
-  content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);
-  color:var(--pink);font-family:var(--mono);font-size:20px;transition:.2s;
+.cta-box > * { position: relative; }
+.cta-box h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
 }
-.q.open button::after{content:"–"}
-.q button:hover{color:var(--pink)}
-.q .a{
-  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
-  color:var(--dim);font-size:15.5px;
+.cta-box h2 .grad {
+  background: linear-gradient(135deg, var(--pink), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.q.open .a{max-height:340px;padding:0 40px 26px 0}
+.cta-box p {
+  color: var(--text-dim);
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  font-size: 0.95rem;
+}
+.cta-buttons {
+  display: flex; gap: 1rem; justify-content: center;
+  flex-wrap: wrap;
+}
 
-/* ---------- ecosystem ---------- */
-.eco{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.ec{
-  border:1px solid var(--line);border-radius:12px;padding:30px;
-  background:var(--panel);transition:.2s;display:block;
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  padding: 3rem 2rem 2rem;
+  border-top: 1px solid var(--border);
+  background: rgba(5, 1, 15, 0.6);
+  backdrop-filter: blur(20px);
+  margin-top: 3rem;
 }
-.ec:hover{border-color:var(--line-2);background:var(--panel-2);transform:translateY(-2px)}
-.ec .tagline{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:14px}
-.ec h3{font-size:20px;letter-spacing:-.025em;margin-bottom:9px}
-.ec p{font-size:14.5px;color:var(--dim)}
-.ec .go{margin-top:20px;font-family:var(--mono);font-size:13px;color:var(--cyan);display:inline-flex;gap:7px;transition:gap .2s}
-.ec:hover .go{gap:12px}
-.ec.pink{border-color:rgba(255,59,158,.2)}
-.ec.pink:hover{border-color:rgba(255,59,158,.45)}
-.ec.cyan{border-color:rgba(0,229,255,.2)}
-.ec.cyan:hover{border-color:rgba(0,229,255,.45)}
-.social{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:40px}
-.social a{
-  font-family:var(--mono);font-size:13px;padding:9px 18px;border-radius:8px;
-  border:1px solid var(--line-2);color:var(--dim);transition:.16s;
+.footer-inner {
+  max-width: 1100px; margin: 0 auto; text-align: center;
 }
-.social a:hover{border-color:var(--pink);color:var(--pink)}
+.footer-links {
+  display: flex; justify-content: center; gap: 1.5rem;
+  flex-wrap: wrap; margin-bottom: 1.5rem;
+}
+.footer-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.25s ease;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.footer-links a:hover { color: var(--pink); }
+.footer-copy {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 2;
+}
+.footer-copy .accent { color: var(--pink); }
+.footer-copy a { color: var(--cyan); text-decoration: none; }
 
-/* ---------- cta ---------- */
-.cta{text-align:center;padding:100px 0}
-.cta h2{max-width:18ch;margin:0 auto}
-.cta .lede{margin-top:20px}
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--pink);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  box-shadow: 0 10px 40px rgba(255, 59, 158, 0.5);
+  transition: transform 0.4s var(--ease);
+  z-index: 1000;
+  display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
 
-/* ---------- footer ---------- */
-footer{border-top:1px solid var(--line);padding:48px 0 40px}
-.foot-top{display:flex;justify-content:space-between;gap:36px;flex-wrap:wrap}
-.foot-cols{display:flex;gap:64px;flex-wrap:wrap}
-.foot-col h5{
-  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--dimmer);font-weight:500;margin-bottom:14px;
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
 }
-.foot-col a{display:block;font-size:14px;color:var(--dim);padding:5px 0;transition:color .15s}
-.foot-col a:hover{color:var(--cyan)}
-.foot-bot{
-  margin-top:44px;padding-top:26px;border-top:1px solid var(--line);
-  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:12.5px;color:var(--dimmer);
-}
-.foot-bot b{color:var(--pink);font-weight:400}
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-@media (max-width:900px){
-  .split{grid-template-columns:1fr;gap:36px}
-  .feat{grid-template-columns:1fr}
-  .eco{grid-template-columns:1fr}
-  .stats{grid-template-columns:1fr;gap:34px}
-  section{padding:70px 0}
-  .hero{padding:74px 0 40px}
-}
-@media (max-width:760px){
-  .nav-links{
-    display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;
-    gap:0;align-items:stretch;background:rgba(10,10,26,.99);
-    border-bottom:1px solid var(--line);padding:8px 24px 18px;
-  }
-  .nav-links.open{display:flex}
-  .nav-links a{padding:13px 0;border-bottom:1px solid var(--line);font-size:15px}
-  .nav-links a:last-child{border-bottom:none}
-  .nav-links .btn{margin-top:12px;width:100%}
-  .burger{display:block}
-  .term-body{font-size:12px}
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .navbar { padding: 0.9rem 1rem; }
+  .nav-links { gap: 0.9rem; }
+  .nav-links a { font-size: 0.8rem; }
+  .nav-brand { font-size: 0.95rem; }
+  .hero { padding: 3.5rem 1.2rem 3rem; }
+  .section { padding: 3rem 1.2rem; }
+  .pm-grid { grid-template-columns: 1fr; }
+  .install-hero-cmd { font-size: 0.78rem; }
+  .install-hero-text { font-size: 0.72rem; }
+  .install-tab { font-size: 0.75rem; padding: 0.7rem 0.5rem; }
+  .terminal-body { font-size: 0.72rem; padding: 1rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- Gate the reveal animations on a `.js` flag so a visitor without
-     JavaScript still sees every section (progressive enhancement). -->
-<script>document.documentElement.classList.add('js')</script>
+<div class="app">
 
-<!-- Column scaffolding borrowed from bleibtgleich.dev: eight hairline rules
-     behind the page, aligned to the same gutters as .wrap. -->
-<div class="gridlines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-
-<!-- Reading progress + replacement pointer. Purely decorative, inert without
-     JS, and hidden outright on touch or reduced-motion devices. -->
-<div class="progress" aria-hidden="true"><i id="prog"></i></div>
-<div class="cursor" id="cursor" aria-hidden="true"><span class="cur-o"></span><span class="cur-d"></span></div>
-
-<nav class="nav" id="nav">
-  <div class="nav-in">
-    <a class="brand" href="#top">
-      <span class="mark"><svg viewBox="0 0 64 64"><path d="M20 16h14a10 10 0 0 1 6 18 11 11 0 0 1-6 20H20z" fill="none" stroke="#ff3b9e" stroke-width="6"/><circle cx="46" cy="18" r="6" fill="#00e5ff"/></svg></span>
-      <span><span class="c">bro</span><span class="p">gang</span></span>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="#" class="nav-brand">
+      <span class="brand-mark"><i class="fas fa-terminal"></i></span>
+      <span>BRO GANG CLI</span>
     </a>
-    <button class="burger" id="burger" aria-label="Menu">≡</button>
-    <div class="nav-links" id="navlinks">
-      <a class="lnk" href="#what">Docs</a>
-      <a class="lnk" href="#providers">Providers</a>
-      <a class="lnk" href="#api">API</a>
-      <a class="lnk" href="#faq">FAQ</a>
-      <a class="lnk" href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn btn-primary" href="#install">Download</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#demo">Demo</a>
+      <a href="#install">Install</a>
+      <a href="#providers">Providers</a>
+      <a href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener">GitHub</a>
+      <a href="#install" class="nav-cta">$ brogang</a>
     </div>
   </div>
 </nav>
 
-<main id="top">
-
 <!-- HERO -->
 <section class="hero">
-  <div class="wrap">
-    <h1>The <em>free</em> AI coding agent</h1>
-    <p class="lede">
-      Free models included, or connect any provider you like — Claude, GPT, Llama and more.
-      No signup, no API key, no cost.
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span>Free forever · No signup · No API key</span>
+    </div>
+    <h1>AI coding agent<br>for your <span class="italic">terminal.</span></h1>
+    <p class="hero-sub">
+      The browser that breaks so you don't have to — now for your shell.
+      Chat, read files, edit code, run commands. Built by BRO GANG. Made in India.
     </p>
-
-    <!-- Install block shaped after opencode.ai's tab strip: one tablist over
-         one panel, active state marked by a rule. npm and pnpm sit first
-         because that is how most people will actually reach this CLI. -->
-    <div class="install" id="install">
-      <div class="lbl">Install — pick your package manager, or use the one-liner</div>
-      <div class="tabs" role="tablist" aria-label="Package manager">
-        <button class="tab" type="button" role="tab" aria-selected="true"
-                data-cmd="npm install -g @brogang/cli">npm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pnpm add -g @brogang/cli">pnpm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="yarn global add @brogang/cli">yarn</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="bun add -g @brogang/cli">bun</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pip install brogang-cli">pip</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="poetry add brogang-cli">poetry</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="uv pip install brogang-cli">uv</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
-      </div>
-      <div class="panels">
-        <div class="panel on" role="tabpanel">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">$</span> <span class="cmd">npm install -g @brogang/cli</span></div>
-            <button class="copy" data-copy="npm install -g @brogang/cli">Copy</button>
-          </div>
-        </div>
-      </div>
-      <p class="alt" style="margin:18px 0 10px">— or install the binary in one line —</p>
-      <div class="panels">
-        <div class="panel on" role="tabpanel">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">$</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.sh | bash</span></div>
-            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.sh | bash">Copy</button>
-          </div>
-        </div>
-        <div class="panel on" role="tabpanel" style="margin-top:10px">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">&gt;</span> <span class="cmd">irm https://brogangaicli.pages.dev/install.ps1 | iex</span></div>
-            <button class="copy" data-copy="irm https://brogangaicli.pages.dev/install.ps1 | iex">Copy</button>
-          </div>
-        </div>
-        <div class="panel on" role="tabpanel" style="margin-top:10px">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">&gt;</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd</span></div>
-            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd">Copy</button>
-          </div>
-        </div>
-      </div>
-      <p class="alt">
-        Prefer a raw binary?
-        <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener">Download from GitHub Releases</a>
-        or read the <a href="https://github.com/TechAdityaBRO/brogang-cli#install" target="_blank" rel="noopener">full install docs</a>.
-      </p>
-      <p class="alt">
-        npm registry blocked or throttled? Use the
-        <a href="https://github.com/orgs/BRO-GANG/packages" target="_blank" rel="noopener">GitHub Packages registry</a>
-        instead — same package, same CLI:
-        <code>npm i @brogang/cli --registry=https://npm.pkg.github.com</code>
-        (browse it at <a href="https://npm.pkg.github.com/@brogang/cli" target="_blank" rel="noopener">npm.pkg.github.com/@brogang/cli</a>).
-      </p>
+    <div class="hero-buttons">
+      <a href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener" class="btn btn-primary">
+        <i class="fab fa-github"></i> View on GitHub
+      </a>
+      <a href="#install" class="btn btn-secondary">
+        <i class="fas fa-download"></i> All install methods
+      </a>
+      <a href="https://discord.gg/nGEhMCVZeR" target="_blank" rel="noopener" class="btn btn-ghost">
+        <i class="fab fa-discord"></i> Join Discord
+      </a>
     </div>
-
-    <div class="hero-cta">
-      <a class="btn btn-primary" href="https://github.com/TechAdityaBRO/brogang-cli#install" target="_blank" rel="noopener">Read docs</a>
-      <a class="btn btn-ghost" href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener">View source</a>
-    </div>
-
-    <p class="hero-note">Linux · Windows · macOS — amd64 &amp; arm64 · MIT licensed</p>
-
-    <div class="term-shell">
-      <div class="term">
-        <div class="term-bar">
-          <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
-          <span class="title">brogang — ~/project</span>
-        </div>
-        <!-- Each line is its own block carrying an index; Cerebrium's
-             terminal reveal derives the delay from --i instead of hardcoding
-             it, so adding a line never means renumbering the rest. -->
-        <div class="term-body"><span class="ln" style="--i:0"><span class="pr">$</span> <span class="wh">brogang "add error handling to the fetch call"</span></span><span class="ln" style="--i:1">&#8203;</span><span class="ln" style="--i:2"><span class="pk">❯</span> <span class="gr">brogang</span> <span class="gr">▸</span> <span class="gr">Bro Gang AI (free, no key)</span></span><span class="ln" style="--i:3"><span class="pk">⚡</span> <span class="gr">read_file</span>  <span class="gr">path: src/api.ts</span></span><span class="ln" style="--i:4"><span class="pk">⚡</span> <span class="gr">edit_file</span>  <span class="gr">path: src/api.ts</span></span><span class="ln" style="--i:5"><span class="gr">  ── step 3/24</span></span><span class="ln" style="--i:6">&#8203;</span><span class="ln" style="--i:7"><span class="wh">Wrapped the call in try/catch, added a typed error branch and</span></span><span class="ln" style="--i:8"><span class="wh">propagated the original cause. Tests still pass.</span></span><span class="ln" style="--i:9">&#8203;</span><span class="ln" style="--i:10"><span class="gr">$</span> <span class="gn">✔</span> <span class="gr">done in 6.2s · $0.00</span></span></div>
-      </div>
-      <div class="cap"><b>Fig 1.</b> A full agent turn — two tool calls, one edit, zero configuration.</div>
+    <div class="hero-meta">
+      <span><i class="fas fa-code"></i> Written in Go</span>
+      <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener">
+        <i class="fas fa-tag"></i> Latest release
+      </a>
+      <a href="https://www.npmjs.com/package/@brogang/cli" target="_blank" rel="noopener">
+        <i class="fab fa-npm"></i> npm
+      </a>
+      <span><i class="fas fa-bolt"></i> Llama 3.3 70B</span>
     </div>
   </div>
 </section>
 
-<!-- TICKER (boc.studio) -->
-<div class="marquee" aria-hidden="true">
-  <div class="mq-track">
-    <span>Claude</span><span>GPT</span><span>Gemini</span><span>Llama</span><span>Mistral</span><span>Qwen</span><span>DeepSeek</span><span>Workers AI</span><span>Ollama</span><span>arm64</span>
-    <span>Claude</span><span>GPT</span><span>Gemini</span><span>Llama</span><span>Mistral</span><span>Qwen</span><span>DeepSeek</span><span>Workers AI</span><span>Ollama</span><span>arm64</span>
-  </div>
-</div>
-
-<!-- STATS -->
-<section class="rule">
-  <div class="wrap">
-    <div class="stats" data-rv>
-      <div class="stat">
-        <div class="n">$0</div>
-        <div class="f">Fig 1. Cost, forever</div>
-        <div class="d">The default model runs on Cloudflare Workers AI. No trial, no card, no timer.</div>
-      </div>
-      <div class="stat">
-        <div class="n">0</div>
-        <div class="f">Fig 2. Setup steps</div>
-        <div class="d">Install and run. No account, no token, no config file written on first launch.</div>
-      </div>
-      <div class="stat">
-        <div class="n">6</div>
-        <div class="f">Fig 3. Target platforms</div>
-        <div class="d">Prebuilt binaries for Linux, Windows and macOS on amd64 and arm64.</div>
-      </div>
+<!-- TERMINAL DEMO -->
+<section class="section" id="demo">
+  <div class="section-inner reveal">
+    <div class="section-header">
+      <div class="section-tag"><i class="fas fa-play"></i> Live Demo</div>
+      <h2 class="section-title">What it <span class="grad">feels like</span></h2>
+      <p class="section-sub">No setup. No config file. Just type and go.</p>
     </div>
-  </div>
-</section>
 
-<!-- WHAT IS -->
-<section class="rule" id="what">
-  <div class="wrap">
-    <div class="eyebrow">What is Bro Gang AI CLI?</div>
-    <div class="split">
-      <div>
-        <h2>An open source agent that works in your terminal.</h2>
-        <p class="prose">
-          Bro Gang AI CLI helps you write code where you already are — in the shell.
-          Give it a task and it reads your files, edits them, searches the tree and runs
-          commands, reporting back what it changed.
-        </p>
-        <p class="prose" style="margin-top:16px">
-          It ships with a <b>hosted, keyless model</b> so the first command you type already works.
-          Everything else is optional.
-        </p>
+    <div class="terminal">
+      <div class="terminal-header">
+        <div class="install-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="terminal-title">~/projects/my-repo</span>
       </div>
-      <div class="code">
-        <div class="hd">Usage</div>
-<pre><span class="c"># interactive session</span>
-<span class="k">$</span> brogang
-
-<span class="c"># one shot, print, exit</span>
-<span class="k">$</span> brogang <span class="s">"refactor the auth middleware"</span>
-
-<span class="c"># auto-approve every tool</span>
-<span class="k">$</span> brogang <span class="g">--yolo</span> <span class="s">"fix the failing tests"</span>
-
-<span class="c"># fully local, no network</span>
-<span class="k">$</span> brogang <span class="g">-p</span> ollama <span class="s">"explain this repo"</span>
-
-<span class="c"># see what's available</span>
-<span class="k">$</span> brogang <span class="g">--list-providers</span></pre>
+      <div class="terminal-body" id="demoTerminal">
+        <span class="ln"><span class="skeleton skeleton-line" style="width: 300px;"></span></span>
+        <span class="ln"><span class="skeleton skeleton-line short"></span></span>
+        <span class="ln"><span class="skeleton skeleton-line tiny"></span></span>
+        <span class="ln"><span class="skeleton skeleton-line" style="width: 250px;"></span></span>
+        <span class="ln"><span class="skeleton skeleton-line short"></span></span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- FEATURES -->
-<section class="rule">
-  <div class="wrap">
-    <div class="eyebrow">Capabilities</div>
-    <h2>Real tools. Real sandbox.</h2>
-    <p class="prose" style="margin-bottom:44px">
-      A genuine tool loop — not a chat box with a file picker bolted on.
-    </p>
-
-    <div class="feat">
-      <div class="f">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg></div>
-        <h3>Full agent loop</h3>
-        <p><code>read_file</code>, <code>write_file</code>, <code>edit_file</code>, <code>list_dir</code>, <code>search</code> and <code>run_command</code>, chained by the model across up to 24 rounds.</p>
+<section class="section" id="features">
+  <div class="section-inner reveal">
+    <div class="section-header">
+      <div class="section-tag"><i class="fas fa-star"></i> Why BRO GANG CLI</div>
+      <h2 class="section-title">Built for the <span class="grad">brave.</span></h2>
+      <p class="section-sub">No credit card. No signup. No excuses.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔓</div>
+        <h3>Zero Setup</h3>
+        <p>Works on first run. No account, no key, no config file. The hosted free provider is built in.</p>
+        <span class="feature-tag tag-free">Free forever</span>
       </div>
-      <div class="f">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div>
-        <h3>Sandboxed paths</h3>
-        <p>Every file tool resolves against your workspace root and rejects <code>..</code> escapes. Destructive shell commands ask before they run.</p>
+      <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3>Bring Your Own Key</h3>
+        <p>Optional: OpenAI, Anthropic, Groq, OpenRouter, Together, Cloudflare, or local Ollama.</p>
+        <span class="feature-tag tag-new">7 providers</span>
       </div>
-      <div class="f">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div>
-        <h3>Zero configuration</h3>
-        <p>The default provider needs no key and writes no config file. Setup is only for people who want to bring their own.</p>
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <h3>Full Agent Mode</h3>
+        <p>Reads, writes, edits files, lists dirs, greps, runs shell commands — with approval prompts.</p>
+        <span class="feature-tag tag-new">Real tools</span>
       </div>
-      <div class="f">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></div>
-        <h3>Any provider</h3>
-        <p>Swap backends with <code>-p</code>. Eight built in, from the free hosted model to a local Ollama server.</p>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Sandboxed</h3>
+        <p>Every file tool is confined to your workspace root. <code>..</code> escapes are rejected.</p>
+        <span class="feature-tag tag-free">Safe by default</span>
       </div>
-      <div class="f">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 4v5h-5"/></svg></div>
-        <h3>Portable binary</h3>
-        <p>Static Go build. No runtime, no <code>node_modules</code>, no virtualenv — it just runs.</p>
+      <div class="feature-card">
+        <div class="feature-icon">✋</div>
+        <h3>Approval Prompts</h3>
+        <p>Destructive commands ask first. Add <code>--yolo</code> when you trust the agent.</p>
+        <span class="feature-tag tag-new">Your call</span>
       </div>
-      <div class="f">
-        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div>
-        <h3>Bang Mach theme</h3>
-        <p>Neon pink and cyan built for long sessions, with spinners, box drawing and full <code>NO_COLOR</code> support.</p>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>One Binary</h3>
+        <p>Static Go binary. No runtime, no node_modules, no dependency hell. Just ship it.</p>
+        <span class="feature-tag tag-free">Static</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Works Offline</h3>
+        <p>Point at a local Ollama server with <code>-p ollama</code> and run fully offline.</p>
+        <span class="feature-tag tag-new">Local-first</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Bang Mach Theme</h3>
+        <p>Neon pink + cyan terminal UI. Honours <code>NO_COLOR</code> like a proper Unix tool.</p>
+        <span class="feature-tag tag-beta">Vibes</span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- PROVIDERS -->
-<section class="rule" id="providers">
-  <div class="wrap">
-    <div class="eyebrow">Providers</div>
-    <h2>Free by default. Open when you want it.</h2>
-    <p class="prose" style="margin-bottom:44px">
-      Switch backends with <code style="font-family:var(--mono);color:var(--cyan);font-size:15px">-p &lt;name&gt;</code>.
-      Only the paid ones ask for a key.
+<section class="section" id="providers">
+  <div class="section-inner reveal">
+    <div class="section-header">
+      <div class="section-tag"><i class="fas fa-plug"></i> Providers</div>
+      <h2 class="section-title">Pick your <span class="grad">backend.</span></h2>
+      <p class="section-sub">The default is free and needs no key. Everything else is optional.</p>
+    </div>
+    <div class="providers-grid">
+      <div class="provider featured">
+        <div class="provider-name">brogang</div>
+        <div class="provider-meta">BRO GANG AI (Cloudflare Workers)</div>
+        <span class="provider-badge badge-free">FREE · no key</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">cloudflare</div>
+        <div class="provider-meta">Your own Workers AI</div>
+        <span class="provider-badge badge-free">Free tier</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">groq</div>
+        <div class="provider-meta">Groq Cloud</div>
+        <span class="provider-badge badge-free">Free tier</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">ollama</div>
+        <div class="provider-meta">Localhost</div>
+        <span class="provider-badge badge-local">Local</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">openai</div>
+        <div class="provider-meta">GPT models</div>
+        <span class="provider-badge badge-byok">BYOK</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">anthropic</div>
+        <div class="provider-meta">Claude models</div>
+        <span class="provider-badge badge-byok">BYOK</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">openrouter</div>
+        <div class="provider-meta">Multi-model gateway</div>
+        <span class="provider-badge badge-byok">BYOK</span>
+      </div>
+      <div class="provider">
+        <div class="provider-name">together</div>
+        <div class="provider-meta">Together AI</div>
+        <span class="provider-badge badge-byok">BYOK</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="section" id="install">
+  <div class="section-inner reveal">
+    <div class="section-header">
+      <div class="section-tag"><i class="fas fa-download"></i> Install</div>
+      <h2 class="section-title">Pick your <span class="grad">package manager.</span></h2>
+      <p class="section-sub">One command. Any OS. No runtime, no config, no key.</p>
+    </div>
+
+    <!-- PRIMARY -->
+    <div class="install-hero">
+      <div class="install-hero-header">
+        <div class="install-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="install-hero-title">
+          <i class="fas fa-bolt" style="color: var(--pink);"></i>
+          One-line install — any OS
+        </span>
+        <span class="install-hero-badge">RECOMMENDED</span>
+      </div>
+
+      <div class="install-tabs">
+        <button class="install-tab active" data-os="unix">
+          <i class="fab fa-apple"></i> macOS / Linux
+        </button>
+        <button class="install-tab" data-os="windows">
+          <i class="fab fa-windows"></i> Windows
+        </button>
+      </div>
+
+      <div class="install-hero-body">
+        <div class="install-hero-cmd">
+          <span class="install-hero-prompt">$</span>
+          <span class="install-hero-text" id="primaryText">curl -fsSL https://brogangaicli.pages.dev/install.sh | bash</span>
+          <button class="install-hero-copy" id="primaryCopyBtn" aria-label="Copy install command">
+            <i class="fas fa-copy"></i>
+            <span id="primaryCopyLabel">Copy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACKAGE MANAGERS -->
+    <div class="pm-grid">
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #cb3837, #a52a2a);">
+            <i class="fab fa-npm"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">npm</div>
+            <div class="pm-sub">Node package manager</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">npm i -g @brogang/cli</span>
+          <button class="pm-copy" data-copy="npm i -g @brogang/cli" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #f69220, #f9ad00);">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">pnpm</div>
+            <div class="pm-sub">Fast, disk-efficient</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">pnpm add -g @brogang/cli</span>
+          <button class="pm-copy" data-copy="pnpm add -g @brogang/cli" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #fbf0df, #f6dece);">
+            <span style="color: #000; font-weight: 900; font-size: 1.3rem;">b</span>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Bun</div>
+            <div class="pm-sub">All-in-one runtime</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">bun add -g @brogang/cli</span>
+          <button class="pm-copy" data-copy="bun add -g @brogang/cli" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #2188b6, #2c8ebb);">
+            <i class="fas fa-code-branch"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Yarn</div>
+            <div class="pm-sub">Classic package manager</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">yarn global add @brogang/cli</span>
+          <button class="pm-copy" data-copy="yarn global add @brogang/cli" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #00add8, #007d9c);">
+            <span style="font-weight: 900; font-family: 'JetBrains Mono', monospace; font-size: 1rem;">Go</span>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Go install</div>
+            <div class="pm-sub">Native Go toolchain</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest</span>
+          <button class="pm-copy" data-copy="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #3776ab, #ffd43b);">
+            <i class="fab fa-python"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">uv / pip</div>
+            <div class="pm-sub">Python package manager</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">uv pip install brogang-cli</span>
+          <button class="pm-copy" data-copy="uv pip install brogang-cli" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #fbb040, #f7931e);">
+            <i class="fas fa-beer"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Homebrew</div>
+            <div class="pm-sub">macOS &amp; Linux</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">brew install TechAdityaBRO/tap/brogang</span>
+          <button class="pm-copy" data-copy="brew install TechAdityaBRO/tap/brogang" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #0078d4, #005a9e);">
+            <i class="fas fa-bucket"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Scoop</div>
+            <div class="pm-sub">Windows package manager</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">scoop install brogang</span>
+          <button class="pm-copy" data-copy="scoop install brogang" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #2496ed, #0db7ed);">
+            <i class="fab fa-docker"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Docker</div>
+            <div class="pm-sub">Containerized</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">docker run --rm -it brogang/cli</span>
+          <button class="pm-copy" data-copy="docker run --rm -it brogang/cli" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="pm-card pm-card-primary">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #ff3b9e, #8b4dff);">
+            <i class="fas fa-download"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Prebuilt binary</div>
+            <div class="pm-sub">6 platform/arch combos</div>
+          </div>
+        </div>
+        <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener" class="pm-link">
+          <i class="fab fa-github"></i> View Releases
+        </a>
+      </div>
+
+      <div class="pm-card pm-card-primary">
+        <div class="pm-head">
+          <div class="pm-icon" style="background: linear-gradient(135deg, #00e5ff, #6d28d9);">
+            <i class="fas fa-hammer"></i>
+          </div>
+          <div class="pm-title-group">
+            <div class="pm-title">Build from source</div>
+            <div class="pm-sub">Clone, make, ship</div>
+          </div>
+        </div>
+        <div class="pm-cmd">
+          <span class="pm-prompt">$</span>
+          <span class="pm-text">git clone … &amp;&amp; cd brogang-cli &amp;&amp; make build</span>
+          <button class="pm-copy" data-copy="git clone https://github.com/TechAdityaBRO/brogang-cli && cd brogang-cli && make build" aria-label="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <p class="pm-footnote">
+      <i class="fas fa-lock"></i>
+      MIT licensed · 6 platforms · static binary · no runtime dependencies
     </p>
-
-    <div class="tbl">
-      <table>
-        <thead>
-          <tr><th>Backend</th><th>Description</th><th>Cost</th><th>API key</th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="k">brogang<span class="d">default</span></td><td>Bro Gang AI · Cloudflare Workers AI</td><td><span class="tag free">Free</span></td><td>Not required</td></tr>
-          <tr><td class="k">ollama</td><td>Runs locally on your own machine</td><td><span class="tag free">Free</span></td><td>Not required</td></tr>
-          <tr><td class="k">cloudflare</td><td>Your own Cloudflare Workers AI account</td><td><span class="tag free">Free tier</span></td><td>Required</td></tr>
-          <tr><td class="k">groq</td><td>Groq fast inference</td><td><span class="tag free">Free tier</span></td><td>Required</td></tr>
-          <tr><td class="k">openai</td><td>GPT models</td><td><span class="tag">Paid</span></td><td>Required</td></tr>
-          <tr><td class="k">anthropic</td><td>Claude models</td><td><span class="tag">Paid</span></td><td>Required</td></tr>
-          <tr><td class="k">openrouter</td><td>One key, many models</td><td><span class="tag">Paid</span></td><td>Required</td></tr>
-          <tr><td class="k">together</td><td>Together AI open models</td><td><span class="tag">Paid</span></td><td>Required</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- API -->
-<section class="rule" id="api">
-  <div class="wrap">
-    <div class="eyebrow">Open endpoint</div>
-    <div class="split">
-      <div>
-        <h2>An OpenAI-compatible API. Free and keyless.</h2>
-        <p class="prose">
-          The CLI is just a client. Point anything at it — a script, a website, another agent.
-          Same shape as the OpenAI SDK, so swapping the base URL is often all it takes.
-        </p>
-        <ul class="list">
-          <li><span class="b">1</span><span><b>POST</b> /v1/chat/completions — chat, with optional tool definitions</span></li>
-          <li><span class="b">2</span><span><b>GET</b> /v1/models — list the available model</span></li>
-          <li><span class="b">3</span><span><b>GET</b> /v1 — endpoint metadata</span></li>
-        </ul>
-      </div>
-      <div class="code">
-        <div class="hd">curl</div>
-<pre><span class="k">curl</span> https://brogangaicli.pages.dev/v1/chat/completions \
-  <span class="g">-H</span> <span class="s">'content-type: application/json'</span> \
-  <span class="g">-d</span> <span class="s">'{
-    "messages": [
-      {"role":"user","content":"hi"}
-    ]
-  }'</span></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="rule" id="faq">
-  <div class="wrap">
-    <div class="eyebrow" style="text-align:center">FAQ</div>
-    <h2 class="center">Questions</h2>
-    <div class="faq" style="margin-top:48px">
-      <div class="q">
-        <button>Is it actually free?</button>
-        <div class="a">Yes. The default provider runs on a hosted Cloudflare Workers AI endpoint that requires no account and no API key. There is no trial, no card, and no usage cap tied to you. You can also point it at your own paid provider or a local Ollama server at any time.</div>
-      </div>
-      <div class="q">
-        <button>Do I need to sign up for anything?</button>
-        <div class="a">No. Install the binary and run it. A configuration file is only created if you explicitly run <code style="font-family:var(--mono);color:var(--cyan)">--setup</code> to add a provider of your own — the default path never writes one.</div>
-      </div>
-      <div class="q">
-        <button>Can it damage my machine?</button>
-        <div class="a">File tools are confined to your workspace root: every path is resolved against it and anything that escapes is rejected, including <code style="font-family:var(--mono);color:var(--cyan)">..</code> traversal and absolute paths outside the project. Shell commands ask for approval before running unless you pass <code style="font-family:var(--mono);color:var(--cyan)">--yolo</code>.</div>
-      </div>
-      <div class="q">
-        <button>Which languages and platforms are supported?</button>
-        <div class="a">The reference implementation is written in Go and ships as a static binary for Linux, Windows and macOS on amd64 and arm64. TypeScript and Python packages are on the way, alongside the rest of the language matrix.</div>
-      </div>
-      <div class="q">
-        <button>Does it work offline?</button>
-        <div class="a">Yes. Run it with <code style="font-family:var(--mono);color:var(--cyan)">-p ollama</code> and it talks to a local Ollama server instead. Everything else stays the same — same tools, same sandbox, same theme.</div>
-      </div>
-      <div class="q">
-        <button>Where is my code sent?</button>
-        <div class="a">Only the context needed for the current turn is sent to whichever provider you selected. The default endpoint runs on Cloudflare Workers AI and does not persist your prompts.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ECOSYSTEM -->
-<section class="rule">
-  <div class="wrap">
-    <div class="eyebrow" style="text-align:center">Ecosystem</div>
-    <h2 class="center">More from BRO GANG</h2>
-    <p class="prose center" style="margin-bottom:44px">One crew, a few things worth your time.</p>
-
-    <div class="eco">
-      <a class="ec cyan" href="https://pglove.jo3.org" target="_blank" rel="noopener">
-        <div class="tagline">Browser</div>
-        <h3>PGlove</h3>
-        <p>A fast, privacy-first browser built by the same crew. Pair it with the CLI and stop pasting context between windows.</p>
-        <span class="go">pglove.jo3.org →</span>
-      </a>
-      <a class="ec pink" href="https://brogang.techaditya.workers.dev" target="_blank" rel="noopener">
-        <div class="tagline">Community</div>
-        <h3>BRO GANG</h3>
-        <p>East 2022 — a community of 38 friends, one foot in Vice City, one in the blocky world. Home of the brand behind this CLI.</p>
-        <span class="go">brogang.techaditya.workers.dev →</span>
-      </a>
-      <a class="ec" href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener">
-        <div class="tagline">Source</div>
-        <h3>GitHub</h3>
-        <p>MIT licensed. Issues, tagged releases with prebuilt binaries, and the Cloudflare Pages endpoint that powers the free tier.</p>
-        <span class="go">TechAdityaBRO/brogang-cli →</span>
-      </a>
-    </div>
-
-    <div class="social">
-      <a href="https://pglove.jo3.org" target="_blank" rel="noopener">PGlove ↗</a>
-      <a href="https://brogang.techaditya.workers.dev" target="_blank" rel="noopener">BRO GANG ↗</a>
-      <a href="https://github.com/TechAdityaBRO" target="_blank" rel="noopener">GitHub ↗</a>
-      <a href="https://discord.gg/TSWg34Zets" target="_blank" rel="noopener">Discord ↗</a>
-      <a href="https://www.youtube.com/@BroGangYoutube" target="_blank" rel="noopener">YouTube ↗</a>
-      <a href="mailto:brogang@atomicmail.io">Email</a>
-    </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section class="cta rule">
-  <!-- phobos.com.au's dotted rings, turning slowly behind the copy. -->
-  <div class="rings" aria-hidden="true">
-    <svg viewBox="0 0 400 400">
-      <circle class="r0" cx="200" cy="200" r="197"/>
-      <circle class="r1" cx="200" cy="200" r="150"/>
-      <circle class="r2" cx="200" cy="200" r="103"/>
-    </svg>
-  </div>
-  <div class="wrap">
-    <div class="eyebrow" style="text-align:center">Get started</div>
-    <h2 class="center">One command. Zero setup.</h2>
-    <p class="lede">Install it, run it, and it works — no key, no account, no trial counting down.</p>
-
-    <div class="install" style="margin-top:34px">
-      <div class="lbl">Install — pick your package manager, or use the one-liner</div>
-      <div class="tabs" role="tablist" aria-label="Package manager">
-        <button class="tab" type="button" role="tab" aria-selected="true"
-                data-cmd="npm install -g @brogang/cli">npm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pnpm add -g @brogang/cli">pnpm</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="yarn global add @brogang/cli">yarn</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="bun add -g @brogang/cli">bun</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="pip install brogang-cli">pip</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="poetry add brogang-cli">poetry</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="uv pip install brogang-cli">uv</button>
-        <button class="tab" type="button" role="tab" aria-selected="false"
-                data-cmd="go install github.com/TechAdityaBRO/brogang-cli/cmd/brogang@latest">go</button>
+<section class="section">
+  <div class="section-inner reveal">
+    <div class="cta-box">
+      <h2>Fork it. Build it. <span class="grad">Break it. Ship it.</span></h2>
+      <p>
+        BRO GANG CLI is yours. MIT licensed. Built by a 38-member friend group from India
+        on 4GB RAM and an Intel Celeron — to prove small hardware can do big things.
+      </p>
+      <div class="cta-buttons">
+        <a href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener" class="btn btn-primary">
+          <i class="fab fa-github"></i> Star on GitHub
+        </a>
+        <a href="https://github.com/TechAdityaBRO/brogang-cli/issues" target="_blank" rel="noopener" class="btn btn-secondary">
+          <i class="fas fa-bug"></i> Report a bug
+        </a>
       </div>
-      <div class="panels">
-        <div class="panel on" role="tabpanel">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">$</span> <span class="cmd">npm install -g @brogang/cli</span></div>
-            <button class="copy" data-copy="npm install -g @brogang/cli">Copy</button>
-          </div>
-        </div>
-      </div>
-      <p class="alt" style="margin:18px 0 10px">— or install the binary in one line —</p>
-      <div class="panels">
-        <div class="panel on" role="tabpanel">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">$</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.sh | bash</span></div>
-            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.sh | bash">Copy</button>
-          </div>
-        </div>
-        <div class="panel on" role="tabpanel" style="margin-top:10px">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">&gt;</span> <span class="cmd">irm https://brogangaicli.pages.dev/install.ps1 | iex</span></div>
-            <button class="copy" data-copy="irm https://brogangaicli.pages.dev/install.ps1 | iex">Copy</button>
-          </div>
-        </div>
-        <div class="panel on" role="tabpanel" style="margin-top:10px">
-          <div class="cmdbar">
-            <div class="t"><span class="pr">&gt;</span> <span class="cmd">curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd</span></div>
-            <button class="copy" data-copy="curl -fsSL https://brogangaicli.pages.dev/install.cmd -o install.cmd &amp;&amp; install.cmd">Copy</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-cta" style="margin-top:24px">
-      <a class="btn btn-primary" href="https://github.com/TechAdityaBRO/brogang-cli#install" target="_blank" rel="noopener">Read docs</a>
-      <a class="btn btn-ghost" href="https://discord.gg/TSWg34Zets" target="_blank" rel="noopener">Join the gang</a>
     </div>
   </div>
 </section>
 
-</main>
-
-<!-- minecraft.net: an 8px block edge handing the page over to the footer. -->
-<div class="pixdiv" aria-hidden="true"></div>
-
-<footer>
-  <div class="wrap">
-    <div class="foot-top">
-      <div>
-        <a class="brand" href="#top">
-          <span class="mark"><svg viewBox="0 0 64 64"><path d="M20 16h14a10 10 0 0 1 6 18 11 11 0 0 1-6 20H20z" fill="none" stroke="#ff3b9e" stroke-width="6"/><circle cx="46" cy="18" r="6" fill="#00e5ff"/></svg></span>
-          <span><span class="c">bro</span><span class="p">gang</span></span>
-        </a>
-        <p style="font-size:14px;color:var(--dim);max-width:280px;margin-top:16px">
-          The free AI coding agent for your terminal.
-        </p>
-      </div>
-
-      <div class="foot-cols">
-        <div class="foot-col">
-          <h5>Product</h5>
-          <a href="#what">Docs</a>
-          <a href="#providers">Providers</a>
-          <a href="#api">API</a>
-          <a href="#faq">FAQ</a>
-        </div>
-        <div class="foot-col">
-          <h5>BRO GANG</h5>
-          <a href="https://pglove.jo3.org" target="_blank" rel="noopener">PGlove</a>
-          <a href="https://brogang.techaditya.workers.dev" target="_blank" rel="noopener">BRO GANG site</a>
-          <a href="https://discord.gg/TSWg34Zets" target="_blank" rel="noopener">Discord</a>
-          <a href="https://www.youtube.com/@BroGangYoutube" target="_blank" rel="noopener">YouTube</a>
-        </div>
-        <div class="foot-col">
-          <h5>Source</h5>
-          <a href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener">Repository</a>
-          <a href="https://github.com/TechAdityaBRO/brogang-cli/releases" target="_blank" rel="noopener">Releases</a>
-          <a href="https://github.com/TechAdityaBRO/brogang-cli/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
-          <a href="mailto:brogang@atomicmail.io">Contact</a>
-        </div>
-      </div>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="https://github.com/TechAdityaBRO/brogang-cli" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+      <a href="https://discord.gg/nGEhMCVZeR" target="_blank" rel="noopener"><i class="fab fa-discord"></i> Discord</a>
+      <a href="https://youtube.com/@ProGroup_24" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> YouTube</a>
+      <a href="https://www.npmjs.com/package/@brogang/cli" target="_blank" rel="noopener"><i class="fab fa-npm"></i> npm</a>
+      <a href="mailto:progroup@atomicmail.io"><i class="fas fa-envelope"></i> Email</a>
     </div>
-
-    <div class="foot-bot">
-      <span>Built by <b>BRO GANG</b> · East 2022 · Made in India 🇮🇳</span>
-      <span>Free forever. Fork it, break it, ship it.</span>
-    </div>
+    <p class="footer-copy">
+      BRO GANG CLI · <span class="accent">Free forever AI coding agent</span> · MIT licensed<br>
+      Built by <a href="https://github.com/TechAdityaBRO" target="_blank" rel="noopener">BRO GANG</a> · East 2022 · Made in India 🇮🇳<br>
+      Llama 3.3 70B is provided under the Llama 3.3 Community License by Meta.
+    </p>
   </div>
 </footer>
 
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle"></i>
+  <span>Copied to clipboard</span>
+</div>
+
 <script>
-var nav=document.getElementById('nav');
-var prog=document.getElementById('prog');
-var burger=document.getElementById('burger');
-var links=document.getElementById('navlinks');
-burger.onclick=function(){links.classList.toggle('open')};
+/* ============================================================
+   SKELETON → CONTENT REPLACEMENT
+   Terminal demo plays only when visible; skeletons fade out
+   ============================================================ */
 
-/* A single passive listener drives the chrome: the header condensing, it
-   retracting on the way down and returning on the way up (phobos.com.au),
-   and the reading-progress rule pinned to the top (daoism.systems). */
-var lastY=scrollY;
-addEventListener('scroll',function(){
-  var y=scrollY;
-  nav.classList.toggle('stuck',y>8);
-  if(prog){
-    var max=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(max>0?(y/max)*100:0)+'%';
+const termLines = [
+  { type: 'cmd', prompt: '$ ', text: 'brogang "explain what this repo does"' },
+  { type: 'ai', text: '❯ brogang ▸ Bro Gang AI (free, no key)' },
+  { type: 'tool', text: '⚡ read_file path: README.md' },
+  { type: 'out', text: '' },
+  { type: 'ai', text: 'This is BRO GANG CLI — a terminal coding agent.' },
+  { type: 'out', text: 'It reads files, edits code, and runs commands.' },
+  { type: 'out', text: 'Default provider is free, no key needed.' },
+  { type: 'out', text: '' },
+  { type: 'cmd', prompt: '$ ', text: 'brogang "refactor the auth middleware"' },
+  { type: 'ai', text: '❯ brogang ▸ Bro Gang AI (free, no key)' },
+  { type: 'tool', text: '⚡ read_file path: src/auth/middleware.ts' },
+  { type: 'tool', text: '⚡ grep pattern: "jwt.verify"' },
+  { type: 'tool', text: '⚡ edit_file path: src/auth/middleware.ts' },
+  { type: 'out', text: '   ✓ Replaced 3 lines' },
+  { type: 'ai', text: 'Done. Refactored to use the shared verifyToken() helper.' },
+  { type: 'out', text: '' }
+];
+
+const termEl = document.getElementById('demoTerminal');
+let lineIdx = 0;
+let termStarted = false;
+
+function renderTerminal() {
+  if (lineIdx >= termLines.length) {
+    setTimeout(() => {
+      termEl.innerHTML = '';
+      lineIdx = 0;
+      renderTerminal();
+    }, 4000);
+    return;
   }
-  if(links.classList.contains('open')){nav.classList.remove('hide');lastY=y;return}
-  if(y>260&&y>lastY+4)nav.classList.add('hide');
-  else if(y<lastY-4||y<=260)nav.classList.remove('hide');
-  lastY=y;
-},{passive:true});
-document.querySelectorAll('#navlinks a').forEach(function(a){
-  a.addEventListener('click',function(){document.getElementById('navlinks').classList.remove('open')});
-});
 
-document.querySelectorAll('.copy').forEach(function(b){
-  b.addEventListener('click',function(){
-    var t=b.getAttribute('data-copy');
-    var done=function(){var o=b.textContent;b.textContent='Copied';b.classList.add('ok');
-      setTimeout(function(){b.textContent=o;b.classList.remove('ok')},1500)};
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(t).then(done,function(){fb(t);done()});
-    }else{fb(t);done()}
+  const line = termLines[lineIdx];
+  const span = document.createElement('span');
+  span.className = 'ln';
+
+  if (line.type === 'cmd') {
+    span.innerHTML = `<span class="prompt">${line.prompt}</span><span class="cmd">${line.text}</span>`;
+  } else if (line.type === 'ai') {
+    span.innerHTML = `<span class="ai">${line.text}</span>`;
+  } else if (line.type === 'tool') {
+    span.innerHTML = `<span class="tool">${line.text}</span>`;
+  } else if (line.type === 'out') {
+    span.innerHTML = `<span class="out">${line.text || '&nbsp;'}</span>`;
+  }
+
+  termEl.appendChild(span);
+
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  span.appendChild(cursor);
+
+  if (lineIdx > 0) {
+    const prev = termEl.children[lineIdx - 1];
+    const prevCursor = prev.querySelector('.cursor');
+    if (prevCursor) prevCursor.remove();
+  }
+
+  lineIdx++;
+  setTimeout(renderTerminal, line.type === 'cmd' ? 900 : 400);
+}
+
+const termObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !termStarted) {
+      termStarted = true;
+      // Small delay so skeleton is visible for a beat
+      setTimeout(() => {
+        termEl.innerHTML = '';
+        lineIdx = 0;
+        renderTerminal();
+      }, 500);
+      termObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+if (termEl) termObserver.observe(termEl);
+
+/* ============================================================
+   INSTALL — OS Tabs + Copy Buttons
+   ============================================================ */
+const installTabs = document.querySelectorAll('.install-tab');
+const primaryText = document.getElementById('primaryText');
+
+const installCommands = {
+  unix: 'curl -fsSL https://brogangaicli.pages.dev/install.sh | bash',
+  windows: 'irm https://brogangaicli.pages.dev/install.ps1 | iex'
+};
+
+installTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    installTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const os = tab.dataset.os;
+    const cmd = installCommands[os];
+    primaryText.style.opacity = '0';
+    setTimeout(() => {
+      primaryText.textContent = cmd;
+      primaryText.style.opacity = '1';
+    }, 120);
   });
 });
-function fb(t){var i=document.createElement('textarea');i.value=t;document.body.appendChild(i);
-  i.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(i)}
 
-document.querySelectorAll('.q button').forEach(function(b){
-  b.addEventListener('click',function(){
-    var q=b.parentElement, wasOpen=q.classList.contains('open');
-    document.querySelectorAll('.q').forEach(function(x){x.classList.remove('open')});
-    if(!wasOpen)q.classList.add('open');
+const primaryCopyBtn = document.getElementById('primaryCopyBtn');
+const primaryCopyLabel = document.getElementById('primaryCopyLabel');
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  const span = toast.querySelector('span');
+  if (span) span.textContent = msg || 'Copied to clipboard';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+primaryCopyBtn.addEventListener('click', async () => {
+  await copyText(primaryText.textContent);
+  primaryCopyLabel.textContent = 'Copied';
+  primaryCopyBtn.classList.add('copied');
+  showToast('Install command copied');
+  setTimeout(() => {
+    primaryCopyLabel.textContent = 'Copy';
+    primaryCopyBtn.classList.remove('copied');
+  }, 2000);
+});
+
+document.querySelectorAll('.pm-copy').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const text = btn.dataset.copy;
+    if (!text) return;
+    await copyText(text);
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.className = 'fas fa-check';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        icon.className = 'fas fa-copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    }
+    showToast('Copied: ' + (text.length > 40 ? text.substring(0, 40) + '…' : text));
   });
 });
 
-/* Package-manager tabs — opencode.ai's install pattern. Swapping the text
-   and data-copy in place keeps one panel instead of four. */
-document.querySelectorAll('.install').forEach(function(box){
-  var tabs=Array.prototype.slice.call(box.querySelectorAll('.tab')),
-      cmd=box.querySelector('.cmd'), copy=box.querySelector('.copy');
-  if(!tabs.length||!cmd)return;
-  function pick(t){
-    tabs.forEach(function(x){x.setAttribute('aria-selected',x===t?'true':'false')});
-    cmd.textContent=t.getAttribute('data-cmd');
-    if(copy)copy.setAttribute('data-copy',t.getAttribute('data-cmd'));
-  }
-  tabs.forEach(function(t,i){
-    t.addEventListener('click',function(){pick(t)});
-    t.addEventListener('keydown',function(e){
-      var d=e.key==='ArrowRight'?1:(e.key==='ArrowLeft'?-1:0);
-      if(!d)return; e.preventDefault();
-      var n=tabs[(i+d+tabs.length)%tabs.length]; n.focus(); pick(n);
-    });
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ============================================================
+   SMOOTH ANCHOR SCROLL
+   ============================================================ */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 });
 
-/* One observer drives both the terminal's line-by-line stagger and the
-   section reveals; if the API is missing everything simply renders. */
-(function(){
-  var els=document.querySelectorAll('[data-rv],.term');
-  if(!('IntersectionObserver' in window)){
-    els.forEach(function(el){el.classList.add('in','is-visible')}); return;
-  }
-  var io=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(!e.isIntersecting)return;
-      e.target.classList.add('in','is-visible');
-      io.unobserve(e.target);
-    });
-  },{rootMargin:'0px 0px -6% 0px',threshold:.15});
-  els.forEach(function(el){io.observe(el)});
-})();
+/* ============================================================
+   NAVBAR SHADOW ON SCROLL
+   ============================================================ */
+const navbar = document.querySelector('.navbar');
+window.addEventListener('scroll', () => {
+  navbar.style.boxShadow = window.scrollY > 20
+    ? '0 4px 30px rgba(255, 59, 158, 0.15)'
+    : 'none';
+});
 
-/* codapress.co.uk: the pointer becomes two hard-edged squares blended by
-   difference, so it inverts whatever it crosses. Runs only on a fine pointer
-   without reduced motion — coarse pointers and touch never see it. */
-(function(){
-  if(!matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches)return;
-  var c=document.getElementById('cursor');
-  if(!c)return;
-  var live=false;
-  addEventListener('mousemove',function(e){
-    if(!live){live=true;c.classList.add('on')}
-    c.style.transform='translate3d('+e.clientX+'px,'+e.clientY+'px,0)';
-    var t=e.target;
-    c.classList.toggle('is-a',!!(t&&t.closest&&t.closest('a,button')));
-  },{passive:true});
-  document.addEventListener('mouseleave',function(){live=false;c.classList.remove('on')});
-  document.addEventListener('mouseenter',function(){if(live)c.classList.add('on')});
-})();
+console.log('%c$ brogang', 'color: #ff3b9e; font-size: 20px; font-weight: bold; font-family: monospace;');
+console.log('%cBRO GANG CLI — Free forever AI coding agent', 'color: #00e5ff; font-size: 12px; font-family: monospace;');
+console.log('GitHub: https://github.com/TechAdityaBRO/brogang-cli');
 </script>
+
 </body>
 </html>
